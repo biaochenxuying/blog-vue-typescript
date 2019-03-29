@@ -257,6 +257,9 @@ export default class CommentList extends Vue {
     min-height: 40px;
     border-bottom: 1px dashed #f0f0f0;
   }
+  .message {
+    padding: 10px;
+  }
 }
 </style>
 

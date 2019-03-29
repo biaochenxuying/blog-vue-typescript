@@ -71,6 +71,11 @@
                      :loading="btnLoading"
                      @click="handleAddComment">发 送</el-button>
         </div>
+        <CommentList v-if="!isLoading"
+                     :numbers="articleDetail.meta.comments"
+                     :list="articleDetail.comments"
+                     :article_id="articleDetail._id"
+                     @refreshArticle="refreshArticle" />
       </div>
       <div v-if="!isMobileOrPc"
            style="width: 23%"
@@ -78,11 +83,7 @@
            v-html="articleDetail.toc"></div>
       <LoadingCustom v-if="isLoading"></LoadingCustom>
     </div>
-    <CommentList v-if="!isLoading"
-                 :numbers="articleDetail.meta.comments"
-                 :list="articleDetail.comments"
-                 :article_id="articleDetail._id"
-                 @refreshArticle="refreshArticle" />
+
   </div>
 </template>
 <script lang="ts">
