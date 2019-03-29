@@ -12,7 +12,6 @@ Vue3.0 将使用 TS 重写，重写后的 Vue3.0 将更好的支持 TS。2019 �
 
 ## 效果
 
-
 效果图：
 
 - pc 端
@@ -74,6 +73,7 @@ Vue3.0 将使用 TS 重写，重写后的 Vue3.0 将更好的支持 TS。2019 �
  # clone
 git clone https://github.com/biaochenxuying/blog-vue-typescript.git
 ```
+
 ```
 # cd
 cd  blog-vue-typescript
@@ -116,9 +116,19 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 虽然引入了 mock 了，但是还没有时间做模拟数据，想看具体效果，请稳步到我的网站上查看 [https://biaochenxuying.cn](https://biaochenxuying.cn)
 
-## 项目地址与系列相关文章
- 
-*推荐阅读 :*
+## 项目地址与文档教程
+
+**项目地址：**
+
+> [vue 前台展示: https://github.com/biaochenxuying/blog-vue-typescript](https://github.com/biaochenxuying/blog-vue-typescript)
+
+> [react 前台展示: https://github.com/biaochenxuying/blog-react](https://github.com/biaochenxuying/blog-react)
+
+> [管理后台：https://github.com/biaochenxuying/blog-react-admin](https://github.com/biaochenxuying/blog-react-admin)
+
+> [后端：https://github.com/biaochenxuying/blog-node](https://github.com/biaochenxuying/blog-node)
+
+> [blog：https://github.com/biaochenxuying/blog](https://github.com/biaochenxuying/blog)
 
 **本博客系统的系列文章：**
 
@@ -131,14 +141,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - 7. [Vue + TypeScript + Element 搭建简洁时尚的博客网站及踩坑记](https://biaochenxuying.cn/articleDetail?article_id=5c9d8ce5f181945ddd6b0ffc)
 
 
-基于 react + node + express + ant + mongodb 的博客前台，这个是笔者之前做的，效果和这个类似，地址如下：
-[ blog-react 前台展示: https://github.com/biaochenxuying/blog-react](https://github.com/biaochenxuying/blog-react)
-
-
-## 最后
-
-
-#### 权衡
+## 权衡
 
 如何更好的利用 JS 的动态性和 TS 的静态特质，我们需要结合项目的实际情况来进行综合判断。一些建议：
 
@@ -151,6 +154,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 其实本项目也是小项目来的，其实并不太适合加入  TypeScript ，不过这个项目是个人的项目，是为了练手用的，所以就无伤大大雅。
 
 未来，class-compoent 也将成为主流，现在写 TypeScript 以后进行 3.0 的迁移会更加方便。
+
+## 最后
 
 鉴于问问题的人有点多，笔者时间有限，处理不过来，大家可以加入 QQ 群：**186045338**，加群暗号：**全栈修炼** ，一起相互交流学习。
 
