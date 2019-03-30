@@ -33,8 +33,13 @@
                 <span class="el-dropdown-link">
                   {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
-                <img class="user-img"
+                <img v-if="!userInfo.avatar"
+                     class="user-img"
                      src="../assets/user.png"
+                     alt="BiaoChenXuYing">
+                <img v-if="userInfo.avatar"
+                     class="user-img"
+                     :src="userInfo.avatar"
                      alt="BiaoChenXuYing">
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="logout">登 出</el-dropdown-item>
@@ -148,7 +153,7 @@ import { Route } from "vue-router";
   }
 })
 export default class Nav extends Vue {
-  loading: boolean = false;
+  // loading: boolean = false;
   visible: boolean = false;
   handleFlag: string = "";
   title: string = "首页";
@@ -262,13 +267,18 @@ export default class Nav extends Vue {
   }
 
   async getUser(code: any) {
-    this.loading = true;
+    const loading: any = this.$loading({
+      lock: true,
+      text: "Loading",
+      spinner: "el-icon-loading",
+      background: "rgba(255, 255, 255, 0.7)"
+    });
     let res: any = await this.$https.post(
       this.$urls.getUser,
       { code },
       { withCredentials: true }
     );
-    this.loading = false;
+    loading.close();
     if (res.status === 200) {
       if (res.data.code === 0) {
         const data: any = res.data.data;
@@ -405,7 +415,7 @@ export default class Nav extends Vue {
   }
   .nav-right {
     position: relative;
-    padding-top: 20px;
+    padding-top: 15px;
     text-align: right;
     .el-dropdown {
       cursor: pointer;

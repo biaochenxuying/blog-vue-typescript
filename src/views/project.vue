@@ -111,6 +111,7 @@ export default class Timeline extends Vue {
 </script>
 <style lang="less" scoped>
 .project {
+  overflow: hidden;
   padding: 40px 0;
   .el-col-pointer {
     cursor: pointer;

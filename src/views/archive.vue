@@ -3,8 +3,10 @@
     <el-timeline>
       <el-timeline-item v-for="(l, i) in articlesList"
                         :key="l.year"
-                        placement="top">
+                        placement="top"
+                        hide-timestamp>
         <h3 class="year">{{l.year}}</h3>
+
         <el-timeline-item v-for="(item, index) in l.list"
                           :key="item._id"
                           :color="item.state === 1 ? 'green' : item.state === 3 ? 'red' : ''"
@@ -88,6 +90,7 @@ export default class Archive extends Vue {
     font-size: 30px;
     font-weight: bold;
     color: #000;
+    margin-top: 0;
   }
   a {
     text-decoration: none;

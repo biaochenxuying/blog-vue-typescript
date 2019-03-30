@@ -93,12 +93,12 @@ export default class Slider extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 .slider {
-  display: block;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 70px;
-  padding-top: 70px;
-  max-height: 1000px;
+  // display: block;
+  // position: -webkit-sticky;
+  // position: sticky;
+  // top: 50px;
+  padding-top: 50px;
+  // max-height: 1000px;
 }
 .right {
   text-align: center;
