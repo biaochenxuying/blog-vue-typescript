@@ -52,7 +52,7 @@ export default class Slider extends Vue {
   params: any = {
     keyword: "",
     pageNum: 1,
-    pageSize: 10
+    pageSize: 100
   };
 
   mounted() {
