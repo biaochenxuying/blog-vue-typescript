@@ -56,7 +56,6 @@ h5,
 h6 {
   margin-top: 1em;
 }
-
 strong {
   font-weight: bold;
 }
@@ -72,25 +71,27 @@ p > code:not([class]) {
 img {
   max-width: 100%;
 }
-.article-detail img {
-  /* 图片居中 */
-  display: flex;
-  max-width: 100%;
-  margin: 0 auto;
-}
 
-table {
-  text-align: center;
-  border: 1px solid #ddd;
-  margin-bottom: 1.5em;
-}
-tr {
-  border-bottom: 1px solid #ddd;
-}
-th,
-td {
-  text-align: center;
-  padding: 0.3em;
+.article-detail {
+  img {
+    /* 图片居中 */
+    display: flex;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  table {
+    text-align: center;
+    border: 1px solid #eee;
+    margin-bottom: 1.5em;
+  }
+  th,
+  td {
+    // text-align: center;
+    padding: 0.5em;
+  }
+  tr:nth-child(2n) {
+    background: #f7f7f7;
+  }
 }
 
 #content {
