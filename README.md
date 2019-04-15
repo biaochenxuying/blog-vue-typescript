@@ -62,7 +62,6 @@ Vue3.0 将使用 TS 重写，重写后的 Vue3.0 将更好的支持 TS。2019 �
 - webpack： 4.28.4
 - vuex: ^3.0.1
 - axios：0.18.0
-- redux: 4.0.0
 - highlight.js： 9.15.6
 - marked：0.6.1
 
@@ -94,20 +93,6 @@ npm run serve
 npm run build
 ```
 
-```
-### Run your tests
-npm run test
-```
-
-```
-### Lints and fixes files
-npm run lint
-```
-
-```
-### Run your unit tests
-npm run test:unit
-```
 
 - Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
