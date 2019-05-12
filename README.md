@@ -94,9 +94,6 @@ npm run build
 ```
 
 
-- Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
 如果要看有后台数据完整的效果，是要和后台项目  **[blog-node](https://github.com/biaochenxuying/blog-node)** 一起运行才行的，不然接口请求会失败。
 
 虽然引入了 mock 了，但是还没有时间做模拟数据，想看具体效果，请稳步到我的网站上查看 [https://biaochenxuying.cn](https://biaochenxuying.cn)
@@ -144,8 +141,10 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 鉴于问问题的人有点多，笔者时间有限，处理不过来，大家可以加入 QQ 群：**186045338**，加群暗号：**全栈修炼** ，一起相互交流学习。
 
-欢迎关注以下公众号，学到不一样的 **武功秘籍** ！
+对 **全栈修炼** 有兴趣的朋友可以扫下方二维码关注我的公众号
+ 
+我会不定期更新有价值的内容，长期运营。
 
-关注公众号并回复 **福利** 可领取免费学习资料，福利详情请猛戳：  [免费资源获取--Python、Java、Linux、Go、node、vue、react、javaScript](https://biaochenxuying.cn/articleDetail?article_id=5bf4ba3c245730373274df61)
+关注公众号并回复 **福利** 可领取免费学习资料，福利详情请猛戳：  [Python、Java、Linux、Go、node、vue、react、javaScript](https://biaochenxuying.cn/articleDetail?article_id=5bf4ba3c245730373274df61)
 
-![BiaoChenXuYing.png](https://upload-images.jianshu.io/upload_images/12890819-4d7d488cb8fbb76f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![全栈修炼](https://upload-images.jianshu.io/upload_images/12890819-bce9560fec5c49ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
