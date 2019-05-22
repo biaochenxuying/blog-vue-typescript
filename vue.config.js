@@ -69,9 +69,7 @@ module.exports = {
       // 设置代理
       // proxy all requests starting with /api to jsonplaceholder
       "/api": {
-        // target: "https://emm.cmccbigdata.com:8443/",
         target: "http://localhost:3000/",
-        // target: "http://47.106.136.114/",
         changeOrigin: true,
         ws: true,
         pathRewrite: {
