@@ -151,9 +151,9 @@ export default class Articles extends Vue {
         if (this.total === this.articlesList.length) {
           this.isLoadEnd = true;
         }
-        setTimeout(() => {
+        this.$nextTick(() => {
           lazyload();
-        }, 10);
+        });
       } else {
         this.$message({
           message: res.data.message,
