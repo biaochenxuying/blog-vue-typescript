@@ -40,13 +40,19 @@ export default class Comment extends Vue {
   @Prop({ default: "" }) comment_id!: string;
   @Prop({ default: "" }) article_id!: string;
   @Prop({ default: {} }) to_user!: any;
+  // @Prop({ default: 0 }) cacheTime!: number;
+  // @Prop({ default: 0 }) times!: number;
 
   // initial data
   btnLoading: boolean = false;
   content: any = "";
+  cacheTime: number = 0; // 缓存时间
+  times: number = 0; // 留言次数
 
-  // lifecycle hook
-  mounted() {}
+  // // lifecycle hook
+  // mounted() {
+  //   console.log('mounted !')
+  // }
 
   // computed
   get dialogVisible() {
@@ -66,6 +72,25 @@ export default class Comment extends Vue {
       });
       return;
     }
+
+    if (this.times > 2) {
+      this.$message({
+        message: "您今天评论的次数已经用完，明天再来评论吧！",
+        type: "warning"
+      });
+      return;
+    }
+
+    let now = new Date();
+    let nowTime = now.getTime();
+    if (nowTime - this.cacheTime < 4000) {
+      this.$message({
+        message: "您评论太过频繁，1 分钟后再来评论吧！",
+        type: "warning"
+      });
+      return;
+    }
+
     if (!this.content) {
       this.$message({
         message: "评论内容不能为空",
@@ -73,6 +98,7 @@ export default class Comment extends Vue {
       });
       return;
     }
+    
     let user_id = "";
     if (window.sessionStorage.userInfo) {
       let userInfo = JSON.parse(window.sessionStorage.userInfo);
@@ -94,7 +120,9 @@ export default class Comment extends Vue {
     });
     this.btnLoading = false;
     if (res.status === 200) {
+      this.times++;
       if (res.data.code === 0) {
+        this.cacheTime = nowTime;
         this.content = "";
         this.$message({
           message: res.data.message,
@@ -107,6 +135,7 @@ export default class Comment extends Vue {
         });
       }
     } else {
+      this.times++;
       this.$message({
         message: "网络错误!",
         type: "error"

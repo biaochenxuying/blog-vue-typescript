@@ -3,7 +3,7 @@
     <img class="right-logo"
          src="../assets/userLogo.jpeg"
          alt="">
-    <div class="title">BiaoChenXuYing</div>
+    <div class="title">夜尽天明</div>
     <div class="right-content">
       <!-- <div class="item">
         <div class="num">123</div>粉丝
@@ -28,13 +28,19 @@
       </router-link>
     </div>
     <div class="introduce">
-      <div class="title">本站公众号</div>
+      <div class="title">技术以内的 BB</div>
       <div class="content">
-        <!-- 分享 WEB 全栈开发等相关的技术文章，热点资源<br />
-        全栈程序员的成长之路 -->
-        <img style="width:100%;margin-top:20px"
+        <img style="width:100%;"
              src="../assets/BiaoChenXuYing.png"
-             alt="公众号" />
+             alt="全栈修炼" />
+      </div>
+    </div>
+    <div class="introduce">
+      <div class="title">技术以外的 BB</div>
+      <div class="content">
+        <img style="width:100%;"
+             src="../assets/YingHeZaHuoPu.png"
+             alt="硬核杂货铺" />
       </div>
     </div>
   </div>

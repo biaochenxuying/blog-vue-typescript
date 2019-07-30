@@ -139,6 +139,9 @@ export default class ArticleDetail extends Vue {
     title: "",
     update_time: ""
   };
+  cacheTime: number = 0; // 缓存时间
+  times: number = 0; // 评论次数
+  likeTimes: number = 0; // 点赞次数
 
   mounted() {
     this.params.id = this.$route.query.article_id;
@@ -161,6 +164,25 @@ export default class ArticleDetail extends Vue {
       });
       return;
     }
+
+    if (this.times > 2) {
+      this.$message({
+        message: "您今天评论的次数已经用完，明天再来评论吧！",
+        type: "warning"
+      });
+      return;
+    }
+
+    let now = new Date();
+    let nowTime = now.getTime();
+    if (nowTime - this.cacheTime < 4000) {
+      this.$message({
+        message: "您评论太过频繁，1 分钟后再来留言吧！",
+        type: "warning"
+      });
+      return;
+    }
+
     if (!this.content) {
       this.$message({
         message: "请输入内容!",
@@ -188,7 +210,9 @@ export default class ArticleDetail extends Vue {
     });
     this.btnLoading = false;
     if (res.status === 200) {
+      this.times++;
       if (res.data.code === 0) {
+        this.cacheTime = nowTime;
         this.content = "";
         this.$message({
           message: res.data.message,
@@ -202,6 +226,7 @@ export default class ArticleDetail extends Vue {
         });
       }
     } else {
+      this.times++;
       this.$message({
         message: "网络错误!",
         type: "error"
@@ -210,15 +235,15 @@ export default class ArticleDetail extends Vue {
   }
 
   beforeDestroy() {
-    document.title = "BiaoChenXuYing 的博客网站";
+    document.title = "夜尽天明的博客网站";
     document
       .getElementById("keywords")
-      .setAttribute("content", "BiaoChenXuYing 的博客网站");
+      .setAttribute("content", "夜尽天明 的博客网站");
     document
       .getElementById("description")
       .setAttribute(
         "content",
-        "分享 WEB 全栈开发等相关的技术文章，热点资源，全栈程序员的成长之路。"
+        "分享大前端开发等相关的技术文章，热点资源，全栈程序员的成长之路。"
       );
   }
 
@@ -273,6 +298,15 @@ export default class ArticleDetail extends Vue {
       });
       return;
     }
+
+    if (this.likeTimes > 0) {
+      this.$message({
+        message: "您已经点过赞了！悠着点吧！",
+        type: "warning"
+      });
+      return;
+    }
+
     let user_id: any = "";
     if (window.sessionStorage.userInfo) {
       let userInfo = JSON.parse(window.sessionStorage.userInfo);
@@ -291,6 +325,7 @@ export default class ArticleDetail extends Vue {
     const res: any = await this.$https.post(this.$urls.likeArticle, params);
     this.isLoading = false;
     if (res.status === 200) {
+      this.likeTimes++
       if (res.data.code === 0) {
         ++this.articleDetail.meta.likes;
         this.$message({

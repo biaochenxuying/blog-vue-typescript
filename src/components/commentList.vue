@@ -79,6 +79,8 @@
              :article_id="article_id"
              @handleOk="handleOk"
              @cancel="handleCancel" />
+             <!-- :cacheTime="cacheTime"
+             :times="times" -->
   </div>
 </template>
 <script lang="ts">
@@ -99,6 +101,13 @@ export default class CommentList extends Vue {
   content: any = "";
   comment_id: any = "";
   to_user: any = {};
+  // cacheTime: number = 0; // 缓存时间
+  // times: number = 0; // 留言次数
+
+  // // lifecycle hook
+  // mounted() {
+  //   console.log('mounted !')
+  // }
 
   formatTime(value: any) {
     return timestampToTime(value, true);

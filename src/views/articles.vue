@@ -9,24 +9,27 @@
             v-for="(article) in articlesList"
             :key="article._id"
             class="item">
-          <img class="wrap-img img-blur-done"
-               :data-src="article.img_url"
-               data-has-lazy-src="false"
-               src="../assets/bg.jpg"
-               alt="文章封面" />
-          <div class="content">
-            <h4 class="title">{{article.title}}</h4>
-            <p class="abstract">{{article.desc}}</p>
-            <div class="meta">
-              <span>查看 {{article.meta.views}}</span>
-              <span>评论 {{article.meta.comments}}</span>
-              <span>赞 {{article.meta.likes}}</span>
-              <span v-if="article.create_time"
-                    class="time">
-                {{formatTime(article.create_time)}}
-              </span>
+          <a :href="href + article._id"
+             target="_blank">
+            <img class="wrap-img img-blur-done"
+                 :data-src="article.img_url"
+                 data-has-lazy-src="false"
+                 src="../assets/bg.jpg"
+                 alt="文章封面" />
+            <div class="content">
+              <h4 class="title">{{article.title}}</h4>
+              <p class="abstract">{{article.desc}}</p>
+              <div class="meta">
+                <span>查看 {{article.meta.views}}</span>
+                <span>评论 {{article.meta.comments}}</span>
+                <span>赞 {{article.meta.likes}}</span>
+                <span v-if="article.create_time"
+                      class="time">
+                  {{formatTime(article.create_time)}}
+                </span>
+              </div>
             </div>
-          </div>
+          </a>
         </li>
       </transition-group>
     </ul>
@@ -97,6 +100,10 @@ export default class Articles extends Vue {
     pageNum: 1,
     pageSize: 10
   };
+  href: string =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3001/articleDetail?article_id="
+      : "https://biaochenxuying.cn/articleDetail?article_id=";
 
   // lifecycle hook
   mounted() {
@@ -125,13 +132,13 @@ export default class Articles extends Vue {
   // method
   articleDetail(id: string) {
     // console.log("`id`", `/articleDetail?article_id=${id}`);
-    let url: string = "";
-    if (process.env.NODE_ENV === "development") {
-      url = "http://localhost:3001/articleDetail?";
-    } else {
-      url = "https://biaochenxuying.cn/articleDetail?";
-    }
-    window.open(url + `article_id=${id}`);
+    // let url: string = "";
+    // if (process.env.NODE_ENV === "development") {
+    //   url = "http://localhost:3001/articleDetail?";
+    // } else {
+    //   url = "https://biaochenxuying.cn/articleDetail?";
+    // }
+    // window.open(url + `article_id=${id}`);
   }
   formatTime(value: any) {
     return timestampToTime(value, true);
