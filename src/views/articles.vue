@@ -211,8 +211,9 @@ export default class Articles extends Vue {
     li {
       line-height: 20px;
       position: relative;
-      width: 100%;
+      // width: 100%;
       padding: 15px 0px;
+      padding-right: 150px;
       border-bottom: 1px solid #f0f0f0;
       word-wrap: break-word;
       cursor: pointer;
