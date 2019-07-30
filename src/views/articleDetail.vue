@@ -442,7 +442,7 @@ export default class ArticleDetail extends Vue {
   margin: 50px;
 }
 .loader {
-  color: #999;
+  color: rgb(226, 44, 44);
   text-align: center;
   padding: 50px;
   font-size: 16px;
