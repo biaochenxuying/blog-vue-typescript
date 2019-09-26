@@ -96,8 +96,13 @@ import {
 import markdown from "@/utils/markdown";
 import LoadingCustom from "@/components/loading.vue";
 import CommentList from "@/components/commentList.vue";
+import {
+  ArticleDetailIF,
+  LikeParams,
+  ArticleDetailParams
+} from "@/types/index";
 
-declare var document: any;
+declare let document: Document | any;
 
 @Component({
   components: {
@@ -106,20 +111,16 @@ declare var document: any;
   }
 })
 export default class ArticleDetail extends Vue {
-  reverse: boolean = true;
-  btnLoading: boolean = false;
-  isLoadEnd: boolean = false;
-  isLoading: boolean = false;
-  isMobileOrPc: boolean = isMobileOrPc();
-  articlesList: Array<object> = [];
-  listList: Array<object> = [];
-  total: number = 0;
-  params: any = {
+  private btnLoading: boolean = false;
+  private isLoadEnd: boolean = false;
+  private isLoading: boolean = false;
+  private isMobileOrPc: boolean = isMobileOrPc();
+  private params: ArticleDetailParams = {
     id: "",
     type: 1 //文章类型 => 1: 普通文章，2: 简历，3: 管理员介绍
   };
-  content: string = "";
-  articleDetail: any = {
+  private content: string = "";
+  private articleDetail: ArticleDetailIF = {
     toc: "",
     _id: "",
     author: "biaochenxuying",
@@ -127,6 +128,7 @@ export default class ArticleDetail extends Vue {
     comments: [],
     create_time: "",
     desc: "",
+    content: "",
     id: 16,
     img_url: "",
     numbers: 0,
@@ -139,11 +141,11 @@ export default class ArticleDetail extends Vue {
     title: "",
     update_time: ""
   };
-  cacheTime: number = 0; // 缓存时间
-  times: number = 0; // 评论次数
-  likeTimes: number = 0; // 点赞次数
+  private cacheTime: number = 0; // 缓存时间
+  private times: number = 0; // 评论次数
+  private likeTimes: number = 0; // 点赞次数
 
-  mounted() {
+  mounted(): void {
     this.params.id = this.$route.query.article_id;
     // this.params.id = "5c8cfe5d26bb39b22d3a7aec";
     if (this.$route.path === "/about") {
@@ -152,11 +154,11 @@ export default class ArticleDetail extends Vue {
     this.handleSearch();
   }
 
-  refreshArticle() {
+  refreshArticle(): void {
     this.handleSearch();
   }
 
-  async handleAddComment() {
+  private async handleAddComment(): Promise<void> {
     if (!this.articleDetail._id) {
       this.$message({
         message: "该文章不存在！",
@@ -234,7 +236,7 @@ export default class ArticleDetail extends Vue {
     }
   }
 
-  beforeDestroy() {
+  beforeDestroy(): void {
     document.title = "夜尽天明的博客网站";
     document
       .getElementById("keywords")
@@ -247,11 +249,33 @@ export default class ArticleDetail extends Vue {
       );
   }
 
-  formatTime(value: any) {
+  // // The class component now treats beforeRouteEnter
+  // // and beforeRouteLeave as Vue Router hooks
+  // beforeRouteEnter (to, from, next) {
+  //   console.log('beforeRouteEnter')
+  //   next() // needs to be called to confirm the navigation
+  // }
+
+  // beforeRouteLeave (to, from, next) {
+  //   console.log('beforeRouteLeave')
+  //   document.title = "夜尽天明的博客网站";
+  //   document
+  //     .getElementById("keywords")
+  //     .setAttribute("content", "夜尽天明 的博客网站");
+  //   document
+  //     .getElementById("description")
+  //     .setAttribute(
+  //       "content",
+  //       "分享大前端开发等相关的技术文章，热点资源，全栈程序员的成长之路。"
+  //     );
+  //   next() // needs to be called to confirm the navigation
+  // }
+
+  formatTime(value: string | Date): string {
     return timestampToTime(value, true);
   }
 
-  async handleSearch() {
+  async handleSearch(): Promise<void> {
     this.isLoading = true;
     const res: any = await this.$https.post(
       this.$urls.getArticleDetail,
@@ -290,7 +314,7 @@ export default class ArticleDetail extends Vue {
     }
   }
 
-  async likeArticle() {
+  async likeArticle(): Promise<void> {
     if (!this.articleDetail._id) {
       this.$message({
         message: "该文章不存在！",
@@ -307,7 +331,7 @@ export default class ArticleDetail extends Vue {
       return;
     }
 
-    let user_id: any = "";
+    let user_id: string = "";
     if (window.sessionStorage.userInfo) {
       let userInfo = JSON.parse(window.sessionStorage.userInfo);
       user_id = userInfo._id;
@@ -318,14 +342,14 @@ export default class ArticleDetail extends Vue {
       });
       return;
     }
-    let params: any = {
+    let params: LikeParams = {
       id: this.articleDetail._id,
       user_id
     };
     const res: any = await this.$https.post(this.$urls.likeArticle, params);
     this.isLoading = false;
     if (res.status === 200) {
-      this.likeTimes++
+      this.likeTimes++;
       if (res.data.code === 0) {
         ++this.articleDetail.meta.likes;
         this.$message({

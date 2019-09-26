@@ -32,6 +32,7 @@
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { Dialog, Form, FormItem, Input, Button, Message } from "element-ui";
 import config from "@/utils/config";
+import { LoginParams, UserInfo } from "@/types/index";
 
 @Component({
   components: {
@@ -46,10 +47,10 @@ export default class Login extends Vue {
   @Prop({ default: false }) visible!: boolean;
 
   // initial data
-  btnLoading: boolean = false;
-  loading: boolean = false;
-  formLabelWidth: string = "60px";
-  params: any = {
+  private btnLoading: boolean = false;
+  private loading: boolean = false;
+  private formLabelWidth: string = "60px";
+  private params: LoginParams = {
     email: "",
     password: ""
   };
@@ -60,12 +61,12 @@ export default class Login extends Vue {
   }
 
   // computed
-  get dialogVisible() {
+  get dialogVisible(): boolean {
     return this.visible;
   }
 
   // method
-  handleOAuth() {
+  private handleOAuth(): void {
     // 保存授权前的页面链接内容
     let preventHistory = {
       pathname: window.location.pathname,
@@ -73,12 +74,10 @@ export default class Login extends Vue {
     };
     window.sessionStorage.preventHistory = JSON.stringify(preventHistory);
     // window.location.href = 'https://github.com/login/oauth/authorize?client_id=6de90ab270aea2bdb01c&redirect_uri=http://biaochenxuying.cn/login'
-    window.location.href = `${config.oauth_uri}?client_id=${
-      config.client_id
-    }&redirect_uri=${config.redirect_uri}`;
+    window.location.href = `${config.oauth_uri}?client_id=${config.client_id}&redirect_uri=${config.redirect_uri}`;
   }
 
-  handleOk() {
+  private handleOk(): void {
     const reg = new RegExp(
       "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"
     );
@@ -97,17 +96,17 @@ export default class Login extends Vue {
 
   // this.$emit
   @Emit()
-  cancel() {
+  private cancel(): boolean {
     return false;
   }
   @Emit("ok")
-  async submit() {
+  private async submit(): Promise<false | undefined> {
     const res: any = await this.$https.post(this.$urls.login, this.params);
-    console.log("res :", res);
+    // console.log("res :", res);
     if (res.status === 200) {
       if (res.data.code === 0) {
-        const data: any = res.data.data;
-        const userInfo: object = {
+        const data: UserInfo = res.data.data;
+        const userInfo: UserInfo = {
           _id: data._id,
           name: data.name,
           avatar: data.avatar

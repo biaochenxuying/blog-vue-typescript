@@ -34,6 +34,7 @@ import {
   getQueryStringByName,
   timestampToTime
 } from "@/utils/utils";
+import { Params, TimelineList, TimelinesData } from "@/types/index";
 
 @Component({
   components: {
@@ -42,19 +43,18 @@ import {
   }
 })
 export default class Timeline extends Vue {
-  reverse: boolean = true;
-  isLoadEnd: boolean = false;
-  isLoading: boolean = false;
-  list: Array<object> = [];
-  total: number = 0;
-  params: any = {
+  private isLoadEnd: boolean = false;
+  private isLoading: boolean = false;
+  private list: Array<TimelineList> = [];
+  private total: number = 0;
+  private params: Params = {
     keyword: "",
     pageNum: 1,
     pageSize: 10
   };
 
   // lifecycle hook
-  mounted() {
+  mounted(): void {
     this.handleSearch();
     window.onscroll = () => {
       if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 100) {
@@ -66,10 +66,10 @@ export default class Timeline extends Vue {
     };
   }
 
-  formatTime(value: any) {
+  private formatTime(value: Date | string): string {
     return timestampToTime(value, true);
   }
-  async handleSearch() {
+  private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const res: any = await this.$https.get(this.$urls.getTimeAxisList, {
       params: this.params
@@ -77,7 +77,7 @@ export default class Timeline extends Vue {
     this.isLoading = false;
     if (res.status === 200) {
       if (res.data.code === 0) {
-        const data: any = res.data.data;
+        const data: TimelinesData = res.data.data;
         this.list = [...this.list, ...data.list];
         this.total = data.count;
         this.params.pageNum++;

@@ -70,7 +70,7 @@ export default class Home extends Vue {
         message:
           "本网站已经配置了 https，为了有更好的体验效果，请把地址前缀换成 https 哦",
         type: "warning",
-        duration: 8000
+        duration: 5000
       });
     }
     let sakura_point_vsh: string = `

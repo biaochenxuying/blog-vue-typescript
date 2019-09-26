@@ -40,23 +40,36 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import { MessageParams, RulesItem, Rules } from "@/types/index";
 
-var check = (rule: any, value: any, callback: any) => {
+const check = (rule: any, value: string | any, callback: Function | any): any => {
   if (!value) {
     return callback(new Error("邮箱不能为空"));
   }
 };
-var checkPhone = (rule: any, value: any, callback: any) => {
+const checkPhone = (
+  rule: any,
+  value: string | any,
+  callback: Function | any
+): any => {
   if (!value) {
     return callback(new Error("手机不能为空"));
   }
 };
-var checkName = (rule: any, value: any, callback: any) => {
+const checkName = (
+  rule: any,
+  value: string | any,
+  callback: Function | any
+): any => {
   if (!value) {
     return callback(new Error("名字不能为空"));
   }
 };
-var checkContent = (rule: any, value: any, callback: any) => {
+const checkContent = (
+  rule: any,
+  value: string | any,
+  callback: Function | any
+) => {
   if (!value) {
     return callback(new Error("内容不能为空"));
   }
@@ -65,16 +78,16 @@ var checkContent = (rule: any, value: any, callback: any) => {
 @Component({})
 export default class Message extends Vue {
   // initial data
-  btnLoading: boolean = false;
-  cacheTime: number = 0; // 缓存时间
-  times: number = 0; // 留言次数
-  params: any = {
+  private btnLoading: boolean = false;
+  private cacheTime: number = 0; // 缓存时间
+  private times: number = 0; // 留言次数
+  private params: MessageParams = {
     email: "",
     phone: "",
     name: "",
     content: ""
   };
-  rules: any = {
+  private rules: Rules = {
     email: [{ validator: check, trigger: "blur" }],
     phone: [{ validator: checkPhone, trigger: "blur" }],
     name: [{ validator: checkName, trigger: "blur" }],
@@ -87,7 +100,7 @@ export default class Message extends Vue {
   mounted() {}
 
   // method
-  async submit() {
+  private async submit(): Promise<void> {
     if (this.times > 3) {
       this.$message({
         message: "您今天留言的次数已经用完，明天再来留言吧！",
@@ -106,7 +119,7 @@ export default class Message extends Vue {
       return;
     }
 
-    const reg: any = new RegExp(
+    const reg: RegExp = new RegExp(
       "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"
     );
     if (!this.params.email) {

@@ -38,13 +38,13 @@ if (isMobileOrPc()) {
   }
 })
 export default class App extends Vue {
-  isShowNav: boolean = false;
-  isShowSlider: boolean = false;
-  mounted() {
+  private isShowNav: boolean = false;
+  private isShowSlider: boolean = false;
+  mounted(): void {
     this.routeChange(this.$route, this.$route);
   }
   @Watch("$route")
-  routeChange(val: Route, oldVal: Route) {
+  routeChange(val: Route, oldVal: Route): void {
     const referrer: any = document.getElementById("referrer");
     if (val.path === "/") {
       this.isShowNav = false;

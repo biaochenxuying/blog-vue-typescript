@@ -9,7 +9,7 @@
          class="item">
       <div class="item-header">
         <div class="author">
-          <div class="avator">
+          <div class="avatar">
             <img v-if="item.user.avatar.length < 10"
                  src="../assets/user.png"
                  alt="默认图片">
@@ -30,7 +30,7 @@
       </div>
       <div class="comment-detail">{{item.content}}</div>
       <div class="item-comment">
-        <div @click="showCommentModal(item, false)"
+        <div @click="showCommentModal(item._id, item.user)"
              class="message">
           <el-button size="small">回复</el-button>
         </div>
@@ -40,7 +40,7 @@
            class="item-other">
         <div class="item-header">
           <div class="author">
-            <div class="avator">
+            <div class="avatar">
               <img v-if="e.user.avatar.length < 10"
                    src="../assets/user.png"
                    alt="默认图片">
@@ -64,10 +64,8 @@
           {{e.to_user.type === 0 ? '(作者)' : ''}}：{{e.content}}
         </div>
         <div class="item-comment">
-          <!-- {/* <a class="like">  赞
-									</a> */} -->
           <div class="message">
-            <el-button @click="showCommentModal(item, e)"
+            <el-button @click="showCommentModal(item._id, item.user, e.user)"
                        size="small">回复</el-button>
           </div>
         </div>
@@ -79,14 +77,13 @@
              :article_id="article_id"
              @handleOk="handleOk"
              @cancel="handleCancel" />
-             <!-- :cacheTime="cacheTime"
-             :times="times" -->
   </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 import { timestampToTime } from "@/utils/utils";
 import Comment from "@/components/comment.vue";
+import { ToUser } from "@/types/index";
 
 @Component({
   components: {
@@ -97,34 +94,35 @@ export default class CommentList extends Vue {
   @Prop({ default: [] }) list!: Array<object>;
   @Prop({ default: 0 }) numbers!: number;
   @Prop({ default: "" }) article_id!: string;
-  visible: boolean = false;
-  content: any = "";
-  comment_id: any = "";
-  to_user: any = {};
-  // cacheTime: number = 0; // 缓存时间
-  // times: number = 0; // 留言次数
+  private visible: boolean = false;
+  private comment_id: string = "";
+  private to_user: ToUser = {
+    user_id: "",
+    name: "",
+    avatar: "",
+    type: 0
+  };
 
-  // // lifecycle hook
-  // mounted() {
-  //   console.log('mounted !')
-  // }
-
-  formatTime(value: any) {
+  private formatTime(value: any): string {
     return timestampToTime(value, true);
   }
 
-  handleCancel() {
+  private handleCancel(): void {
     this.visible = false;
   }
 
   // @Emit("refreshArticle")
-  handleOk() {
+  private handleOk(): void {
     this.visible = false;
     this.$emit("refreshArticle");
   }
 
   // 添加评论
-  showCommentModal(item: any, secondItem: any) {
+  private showCommentModal(
+    commitId: string,
+    user: ToUser,
+    secondUser?: ToUser
+  ): boolean | void {
     if (!window.sessionStorage.userInfo) {
       this.$message({
         message: "登录才能点赞，请先登录！",
@@ -133,15 +131,15 @@ export default class CommentList extends Vue {
       return false;
     }
     // 添加三级评论
-    if (secondItem) {
+    if (secondUser) {
       this.visible = true;
-      this.comment_id = item._id;
-      this.to_user = secondItem.user;
+      this.comment_id = commitId;
+      this.to_user = user;
     } else {
       // 添加二级评论
       this.visible = true;
-      this.comment_id = item._id;
-      this.to_user = item.user;
+      this.comment_id = commitId;
+      this.to_user = user;
     }
   }
 }
@@ -149,14 +147,12 @@ export default class CommentList extends Vue {
 <style lang="less" scoped>
 .comment-list {
   text-align: center;
-  // padding: 20px;
 }
 .comment-list {
-  text-align: left;
-  margin-top: 30px;
-  padding-top: 30px;
   position: relative;
-  // padding-left: 58px;
+  text-align: left;
+  padding-top: 30px;
+  margin-top: 30px;
   border-top: 1px solid #eee;
   .avatar {
     position: absolute;
@@ -188,7 +184,7 @@ export default class CommentList extends Vue {
         position: absolute;
         left: 0;
         display: inline-block;
-        .avator {
+        .avatar {
           display: inline-block;
           margin-right: 5px;
           width: 40px;
@@ -197,7 +193,6 @@ export default class CommentList extends Vue {
           img {
             width: 100%;
             height: 100%;
-            // border: 1px solid #ddd;
             border-radius: 50%;
           }
         }
@@ -236,7 +231,7 @@ export default class CommentList extends Vue {
       position: absolute;
       left: 0;
       display: inline-block;
-      .avator {
+      .avatar {
         display: inline-block;
         margin-right: 5px;
         width: 38px;
@@ -245,7 +240,6 @@ export default class CommentList extends Vue {
         img {
           width: 100%;
           height: 100%;
-          // border: 1px solid #ddd;
           border-radius: 50%;
         }
       }

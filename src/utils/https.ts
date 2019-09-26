@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // 创建axios实例
-let service: any = {};
+let service: object | any = {};
 if (process.env.NODE_ENV === "development") {
   service = axios.create({
     baseURL: "/api", // api的base_url
@@ -15,7 +15,6 @@ if (process.env.NODE_ENV === "development") {
   });
 }
 
-// console.log('process.env.BASE_URL',process.env.BASE_URL)
 // request拦截器 axios的一些配置
 service.interceptors.request.use(
   (config: any) => {

@@ -25,7 +25,7 @@
     // 忽略 this 的类型检查, Raise error on this expressions with an implied any type.
     "noImplicitThis": false,
     // 解析非相对模块名的基准目录 
-    "baseUrl": ".",
+    "baseUrl": "./",
     // 给错误和消息设置样式，使用颜色和上下文。
     "pretty": true,
     // 设置引入的定义文件

@@ -51,6 +51,7 @@ import {
 } from "@/utils/utils";
 import LoadEnd from "@/components/loadEnd.vue";
 import LoadingCustom from "@/components/loading.vue";
+import { ArticlesParams, ArticlesData } from "@/types/index";
 
 // 获取可视区域的高度
 const viewHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -86,12 +87,12 @@ const lazyload = throttle(() => {
 })
 export default class Articles extends Vue {
   // initial data
-  isLoadEnd: boolean = false;
-  isLoading: boolean = false;
-  articlesList: Array<object> = [];
-  total: number = 0;
-  tag_name: string = decodeURI(getQueryStringByName("tag_name"));
-  params: any = {
+  private isLoadEnd: boolean = false;
+  private isLoading: boolean = false;
+  private articlesList: Array<object> = [];
+  private total: number = 0;
+  private tag_name: string = decodeURI(getQueryStringByName("tag_name"));
+  private params: ArticlesParams = {
     keyword: "",
     likes: "", // 是否是热门文章
     state: 1, // 文章发布状态 => 0 草稿，1 已发布,'' 代表所有文章
@@ -100,16 +101,16 @@ export default class Articles extends Vue {
     pageNum: 1,
     pageSize: 10
   };
-  href: string =
+  private href: string =
     process.env.NODE_ENV === "development"
       ? "http://localhost:3001/articleDetail?article_id="
       : "https://biaochenxuying.cn/articleDetail?article_id=";
 
   // lifecycle hook
-  mounted() {
+  mounted(): void {
     this.handleSearch();
     window.onscroll = () => {
-      if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 100) {
+      if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 150) {
         // 如果不是已经没有数据了，都可以继续滚动加载
         if (this.isLoadEnd === false && this.isLoading === false) {
           this.handleSearch();
@@ -120,7 +121,7 @@ export default class Articles extends Vue {
   }
 
   @Watch("$route")
-  routeChange(val: Route, oldVal: Route) {
+  routeChange(val: Route, oldVal: Route): void {
     this.tag_name = decodeURI(getQueryStringByName("tag_name"));
     this.params.tag_id = getQueryStringByName("tag_id");
     this.params.category_id = getQueryStringByName("category_id");
@@ -130,7 +131,7 @@ export default class Articles extends Vue {
   }
 
   // method
-  articleDetail(id: string) {
+  private articleDetail(id: string): void {
     // console.log("`id`", `/articleDetail?article_id=${id}`);
     // let url: string = "";
     // if (process.env.NODE_ENV === "development") {
@@ -140,10 +141,10 @@ export default class Articles extends Vue {
     // }
     // window.open(url + `article_id=${id}`);
   }
-  formatTime(value: any) {
+  private formatTime(value: string | Date): string {
     return timestampToTime(value, true);
   }
-  async handleSearch() {
+  private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const res: any = await this.$https.get(this.$urls.getArticleList, {
       params: this.params
@@ -151,16 +152,18 @@ export default class Articles extends Vue {
     this.isLoading = false;
     if (res.status === 200) {
       if (res.data.code === 0) {
-        const data: any = res.data.data;
+        const data: ArticlesData = res.data.data;
         this.articlesList = [...this.articlesList, ...data.list];
         this.total = data.count;
         this.params.pageNum++;
-        if (this.total === this.articlesList.length) {
-          this.isLoadEnd = true;
-        }
         this.$nextTick(() => {
           lazyload();
         });
+        if (data.list.length === 0 || this.total === this.articlesList.length) {
+          this.isLoadEnd = true;
+          document.removeEventListener("scroll", () => {});
+          window.onscroll = null;
+        }
       } else {
         this.$message({
           message: res.data.message,

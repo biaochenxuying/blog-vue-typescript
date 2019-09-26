@@ -79,10 +79,6 @@
            class="nav-mobile-content"
            :class="{'enter-slideUp': enterSlideUp,'leave-slideDown': leaveSlideDown}">
         <div class="list">
-          <!-- <div v-for="(l, i) in list" :key="l.index" @click="handleClickMenu"
-               class="item">
-            <router-link to="/">首页</router-link>
-          </div> -->
           <div @click="handleClickMenu"
                class="item">
             <router-link to="/">首 页</router-link>
@@ -146,6 +142,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import RegisterAndLogin from "@/components/registerAndLogin.vue";
 import { isMobileOrPc, getQueryStringByName } from "@/utils/utils";
 import { Route } from "vue-router";
+import { UserInfo, NavListItem } from "@/types/index";
 
 @Component({
   components: {
@@ -153,11 +150,10 @@ import { Route } from "vue-router";
   }
 })
 export default class Nav extends Vue {
-  // loading: boolean = false;
-  visible: boolean = false;
-  handleFlag: string = "";
-  title: string = "首页";
-  list: Array<object> = [
+  private visible: boolean = false;
+  private handleFlag: string = "";
+  private title: string = "首页";
+  private list: Array<NavListItem> = [
     {
       index: "1",
       path: "/",
@@ -194,11 +190,11 @@ export default class Nav extends Vue {
       name: "关于"
     }
   ];
-  activeIndex: string = "1";
-  enterSlideUp: boolean = false;
-  leaveSlideDown: boolean = false;
-  isShow: boolean = false;
-  isMobile: boolean = isMobileOrPc();
+  private activeIndex: string = "0";
+  private enterSlideUp: boolean = false;
+  private leaveSlideDown: boolean = false;
+  private isShow: boolean = false;
+  private isMobile: boolean = isMobileOrPc();
 
   mounted() {
     // 授权登录的，有 code 参数
@@ -209,11 +205,11 @@ export default class Nav extends Vue {
     }
   }
 
-  get userInfo() {
-    let userInfo: any = {
+  get userInfo(): UserInfo {
+    let userInfo: UserInfo = {
       _id: "",
       name: "",
-      avator: ""
+      avatar: ""
     };
     if (window.sessionStorage.userInfo) {
       userInfo = JSON.parse(window.sessionStorage.userInfo);
@@ -228,9 +224,9 @@ export default class Nav extends Vue {
   }
 
   @Watch("$route")
-  routeChange(val: Route, oldVal: Route) {
+  routeChange(val: Route, oldVal: Route): void {
     for (let i = 0; i < this.list.length; i++) {
-      const l: any = this.list[i];
+      const l: NavListItem = this.list[i];
       if (l.path === val.path) {
         this.activeIndex = i + 1 + "";
         this.title = l.name;
@@ -239,7 +235,7 @@ export default class Nav extends Vue {
     }
   }
 
-  handleClickMenu(route: string) {
+  private handleClickMenu(route: string): void {
     this.isShow = false;
     if (route === "/login") {
       this.handleFlag = "login";
@@ -253,11 +249,11 @@ export default class Nav extends Vue {
       this.handleLogout();
     }
   }
-  handleMenu() {
+  private handleMenu(): void {
     this.isShow = true;
     this.enterSlideUp = true;
   }
-  handleHideMenu() {
+  private handleHideMenu(): void {
     this.enterSlideUp = false;
     this.leaveSlideDown = true;
     setTimeout(() => {
@@ -266,7 +262,7 @@ export default class Nav extends Vue {
     }, 300);
   }
 
-  async getUser(code: any) {
+  private async getUser(code: string): Promise<boolean> {
     const loading: any = this.$loading({
       lock: true,
       text: "Loading",
@@ -281,8 +277,8 @@ export default class Nav extends Vue {
     loading.close();
     if (res.status === 200) {
       if (res.data.code === 0) {
-        const data: any = res.data.data;
-        const userInfo: object = {
+        const data: UserInfo = res.data.data;
+        const userInfo: UserInfo = {
           _id: data._id,
           name: data.name,
           avatar: data.avatar
@@ -319,29 +315,29 @@ export default class Nav extends Vue {
     }
   }
 
-  handleLogout() {
+  private handleLogout(): void {
     window.sessionStorage.userInfo = "";
     this.$store.commit("SAVE_USER", {
       userInfo: {
         _id: "",
         name: "",
-        avator: ""
+        avatar: ""
       }
     });
   }
 
-  handleClick(value: string) {
+  private handleClick(value: string): void {
     this.handleFlag = value;
     this.visible = true;
   }
 
-  handleCancel(value: boolean) {
+  private handleCancel(value: boolean): void {
     this.visible = value;
   }
-  handleOk(value: boolean) {
+  private handleOk(value: boolean): void {
     this.visible = value;
   }
-  handleSelect(val: string, oldVal: string) {
+  private handleSelect(val: string, oldVal: string): void {
     // console.log("val :", val);
     // console.log("oldVal :", oldVal);
     this.activeIndex = val;

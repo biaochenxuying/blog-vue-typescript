@@ -5,14 +5,14 @@ const initPageState = () => {
     userInfo: {
       _id: "",
       name: "",
-      avator: ""
+      avatar: ""
     }
   };
 };
 const user = {
   state: initPageState(),
   mutations: {
-    [types.SAVE_USER](state: any, pageState: any) {
+    [types.SAVE_USER](state: object | any, pageState: object | any) {
       for (const prop in pageState) {
         state[prop] = pageState[prop];
       }

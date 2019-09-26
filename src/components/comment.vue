@@ -25,6 +25,7 @@
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { Dialog, Form, FormItem, Input, Button, Message } from "element-ui";
 import config from "@/utils/config";
+import { ToUser } from "@/types/index";
 
 @Component({
   components: {
@@ -39,23 +40,16 @@ export default class Comment extends Vue {
   @Prop({ default: false }) visible!: boolean;
   @Prop({ default: "" }) comment_id!: string;
   @Prop({ default: "" }) article_id!: string;
-  @Prop({ default: {} }) to_user!: any;
-  // @Prop({ default: 0 }) cacheTime!: number;
-  // @Prop({ default: 0 }) times!: number;
+  @Prop({ default: {} }) to_user!: ToUser;
 
   // initial data
-  btnLoading: boolean = false;
-  content: any = "";
-  cacheTime: number = 0; // 缓存时间
-  times: number = 0; // 留言次数
-
-  // // lifecycle hook
-  // mounted() {
-  //   console.log('mounted !')
-  // }
+  private btnLoading: boolean = false;
+  private content: string = "";
+  private cacheTime: number = 0; // 缓存时间
+  private times: number = 0; // 留言次数
 
   // computed
-  get dialogVisible() {
+  get dialogVisible(): boolean {
     return this.visible;
   }
 
@@ -64,7 +58,7 @@ export default class Comment extends Vue {
   cancel() {}
 
   @Emit("handleOk")
-  async handleOk() {
+  private async handleOk(): Promise<void> {
     if (!this.article_id) {
       this.$message({
         message: "该文章不存在！",
@@ -98,7 +92,7 @@ export default class Comment extends Vue {
       });
       return;
     }
-    
+
     let user_id = "";
     if (window.sessionStorage.userInfo) {
       let userInfo = JSON.parse(window.sessionStorage.userInfo);

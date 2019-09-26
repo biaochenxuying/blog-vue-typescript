@@ -7,11 +7,6 @@ Vue.use(Router);
 export default new Router({
   mode: "history",
   routes: [
-    // {
-    //   path: "/",
-    //   name: "home",
-    //   component: Home
-    // },
     {
       path: "/",
       name: "home",
@@ -67,5 +62,11 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "articleDetail" */ "./views/articleDetail.vue")
     }
+    // {
+    //   path: "*",
+    //   redirect: {
+    //     name: "home"
+    //   }
+    // }
   ]
 });

@@ -25,17 +25,17 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { timestampToTime } from "@/utils/utils";
+import { ParamsArchive } from "@/types/index";
 
 @Component({
   components: {}
 })
 export default class Archive extends Vue {
-  reverse: boolean = true;
-  isLoadEnd: boolean = false;
-  isLoading: boolean = false;
-  articlesList: Array<object> = [];
-  total: number = 0;
-  params: any = {
+  private isLoadEnd: boolean = false;
+  private isLoading: boolean = false;
+  private articlesList: Array<object> = [];
+  private total: number = 0;
+  private params: ParamsArchive = {
     keyword: "",
     likes: "", // 是否是热门文章
     state: 1, // 文章发布状态 => 0 草稿，1 已发布,'' 代表所有文章
@@ -46,14 +46,14 @@ export default class Archive extends Vue {
     pageSize: 10
   };
 
-  mounted() {
+  mounted(): void {
     this.handleSearch();
   }
 
-  formatTime(value: any) {
+  private formatTime(value: string | Date): string {
     return timestampToTime(value, true);
   }
-  async handleSearch() {
+  private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const res: any = await this.$https.get(this.$urls.getArticleList, {
       params: this.params

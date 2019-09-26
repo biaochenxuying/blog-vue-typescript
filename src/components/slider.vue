@@ -48,24 +48,25 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Params, TagsData } from "@/types/index";
 
 @Component
 export default class Slider extends Vue {
-  isLoadEnd: boolean = false;
-  isLoading: boolean = false;
-  list: Array<object> = [];
-  total: number = 0;
-  params: any = {
+  private isLoadEnd: boolean = false;
+  private isLoading: boolean = false;
+  private list: Array<object> = [];
+  private total: number = 0;
+  private params: Params = {
     keyword: "",
     pageNum: 1,
     pageSize: 100
   };
 
-  mounted() {
+  mounted(): void {
     this.handleSearch();
   }
 
-  async handleSearch() {
+  private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const res: any = await this.$https.get(this.$urls.getTagList, {
       params: this.params
@@ -73,7 +74,7 @@ export default class Slider extends Vue {
     this.isLoading = false;
     if (res.status === 200) {
       if (res.data.code === 0) {
-        const data: any = res.data.data;
+        const data: TagsData = res.data.data;
         this.list = [...this.list, ...data.list];
         this.total = data.count;
         this.params.pageNum++;
@@ -99,12 +100,7 @@ export default class Slider extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 .slider {
-  // display: block;
-  // position: -webkit-sticky;
-  // position: sticky;
-  // top: 50px;
   padding-top: 50px;
-  // max-height: 1000px;
 }
 .right {
   text-align: center;

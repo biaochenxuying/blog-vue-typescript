@@ -51,10 +51,10 @@ Vue.prototype.$message = Message;
 Vue.prototype.$loading = Loading.service;
 
 Vue.config.productionTip = false;
-Vue.prototype.$https = service; // 其他页面在使用axios的时候直接  this.$http就可以了
-Vue.prototype.$urls = urls; // 其他页面在使用URLS的时候直接  this.$urls就可以了
+Vue.prototype.$https = service; // 其他页面在使用 axios 的时候直接  this.$http 就可以了
+Vue.prototype.$urls = urls; // 其他页面在使用 URLS 的时候直接  this.$urls 就可以了
 
-// 不起作用
+// https://www.npmjs.com/package/vue-class-component#adding-custom-hooks
 Component.registerHooks([
   "beforeRouteEnter",
   "beforeRouteLeave",

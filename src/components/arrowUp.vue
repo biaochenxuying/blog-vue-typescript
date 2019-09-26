@@ -11,11 +11,11 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class ArrowUp extends Vue {
-  isShowBtn: boolean = false;
+  private isShowBtn: boolean = false;
 
   mounted() {
     // 当网页向下滑动 20px 出现"返回顶部" 按钮
-    window.onscroll = () => {
+    window.onscroll = (): void => {
       // console.log(
       //   "window.document.body.scrollTop :",
       //   window.document.body.scrollTop
@@ -31,7 +31,7 @@ export default class ArrowUp extends Vue {
     };
   }
   // 点击按钮，返回顶部
-  topFunction() {
+  private topFunction(): void {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   }
