@@ -71,30 +71,19 @@ export default class Timeline extends Vue {
   }
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
-    const res: any = await this.$https.get(this.$urls.getTimeAxisList, {
-      params: this.params
-    });
-    this.isLoading = false;
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: TimelinesData = res.data.data;
-        this.list = [...this.list, ...data.list];
-        this.total = data.count;
-        this.params.pageNum++;
-        if (this.total === this.list.length) {
-          this.isLoadEnd = true;
-        }
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
+    const data: TimelinesData = await this.$https.get(
+      this.$urls.getTimeAxisList,
+      {
+        params: this.params
       }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
+    );
+    this.isLoading = false;
+
+    this.list = [...this.list, ...data.list];
+    this.total = data.count;
+    this.params.pageNum++;
+    if (this.total === this.list.length) {
+      this.isLoadEnd = true;
     }
   }
 }

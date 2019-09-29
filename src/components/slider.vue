@@ -68,30 +68,16 @@ export default class Slider extends Vue {
 
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
-    const res: any = await this.$https.get(this.$urls.getTagList, {
+    const data: TagsData = await this.$https.get(this.$urls.getTagList, {
       params: this.params
     });
     this.isLoading = false;
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: TagsData = res.data.data;
-        this.list = [...this.list, ...data.list];
-        this.total = data.count;
-        this.params.pageNum++;
-        if (this.total === this.list.length) {
-          this.isLoadEnd = true;
-        }
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
+
+    this.list = [...this.list, ...data.list];
+    this.total = data.count;
+    this.params.pageNum++;
+    if (this.total === this.list.length) {
+      this.isLoadEnd = true;
     }
   }
 }

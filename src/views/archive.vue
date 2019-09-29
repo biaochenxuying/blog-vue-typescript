@@ -25,7 +25,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { timestampToTime } from "@/utils/utils";
-import { ParamsArchive } from "@/types/index";
+import { ParamsArchive, ArchiveData } from "@/types/index";
 
 @Component({
   components: {}
@@ -55,30 +55,15 @@ export default class Archive extends Vue {
   }
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
-    const res: any = await this.$https.get(this.$urls.getArticleList, {
+    const data: ArchiveData = await this.$https.get(this.$urls.getArticleList, {
       params: this.params
     });
     this.isLoading = false;
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: any = res.data.data;
-        this.articlesList = [...this.articlesList, ...data.list];
-        this.total = data.count;
-        this.params.pageNum++;
-        if (this.total === this.articlesList.length) {
-          this.isLoadEnd = true;
-        }
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
+    this.articlesList = [...this.articlesList, ...data.list];
+    this.total = data.count;
+    this.params.pageNum++;
+    if (this.total === this.articlesList.length) {
+      this.isLoadEnd = true;
     }
   }
 }

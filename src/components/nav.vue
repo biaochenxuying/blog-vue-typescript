@@ -262,56 +262,39 @@ export default class Nav extends Vue {
     }, 300);
   }
 
-  private async getUser(code: string): Promise<boolean> {
+  private async getUser(code: string): Promise<void> {
     const loading: any = this.$loading({
       lock: true,
       text: "Loading",
       spinner: "el-icon-loading",
       background: "rgba(255, 255, 255, 0.7)"
     });
-    let res: any = await this.$https.post(
+    const data: UserInfo = await this.$https.post(
       this.$urls.getUser,
       { code },
       { withCredentials: true }
     );
     loading.close();
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: UserInfo = res.data.data;
-        const userInfo: UserInfo = {
-          _id: data._id,
-          name: data.name,
-          avatar: data.avatar
-        };
-        this.$store.commit("SAVE_USER", {
-          userInfo
-        });
-        window.sessionStorage.userInfo = JSON.stringify(userInfo);
-        this.$message({
-          message: res.data.message,
-          type: "success"
-        });
-        let preventHistory = JSON.parse(window.sessionStorage.preventHistory);
-        if (preventHistory) {
-          this.$router.push({
-            path: preventHistory.name,
-            query: preventHistory.query
-          });
-        }
-        return false;
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-        return true;
-      }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
+
+    const userInfo: UserInfo = {
+      _id: data._id,
+      name: data.name,
+      avatar: data.avatar
+    };
+    this.$store.commit("SAVE_USER", {
+      userInfo
+    });
+    window.sessionStorage.userInfo = JSON.stringify(userInfo);
+    this.$message({
+      message: "操作成功",
+      type: "success"
+    });
+    let preventHistory = JSON.parse(window.sessionStorage.preventHistory);
+    if (preventHistory) {
+      this.$router.push({
+        path: preventHistory.name,
+        query: preventHistory.query
       });
-      return true;
     }
   }
 

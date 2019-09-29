@@ -16,10 +16,6 @@ export default class ArrowUp extends Vue {
   mounted() {
     // 当网页向下滑动 20px 出现"返回顶部" 按钮
     window.onscroll = (): void => {
-      // console.log(
-      //   "window.document.body.scrollTop :",
-      //   window.document.body.scrollTop
-      // );
       if (
         window.document.body.scrollTop > 100 ||
         window.document.documentElement.scrollTop > 100

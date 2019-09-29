@@ -100,26 +100,18 @@ export default class Login extends Vue {
     return false;
   }
   @Emit("ok")
-  private async submit(): Promise<false | undefined> {
-    const res: any = await this.$https.post(this.$urls.login, this.params);
-    // console.log("res :", res);
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: UserInfo = res.data.data;
-        const userInfo: UserInfo = {
-          _id: data._id,
-          name: data.name,
-          avatar: data.avatar
-        };
-        window.sessionStorage.userInfo = JSON.stringify(userInfo);
-        Message.success(res.data.message);
-        return false;
-      } else {
-        Message.error(res.data.message);
-      }
-    } else {
-      Message.error("网络错误");
-    }
+  private async submit(): Promise<void> {
+    const data: UserInfo = await this.$https.post(
+      this.$urls.login,
+      this.params
+    );
+    const userInfo: UserInfo = {
+      _id: data._id,
+      name: data.name,
+      avatar: data.avatar
+    };
+    window.sessionStorage.userInfo = JSON.stringify(userInfo);
+    Message.success("登录成功");
   }
 }
 </script>

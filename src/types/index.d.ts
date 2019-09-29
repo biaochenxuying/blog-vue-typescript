@@ -56,6 +56,20 @@ export interface ParamsArchive {
   pageNum: number;
   pageSize: number;
 }
+export interface ArchiveListItem {
+  create_time: string;
+  title: string;
+  _id: string;
+}
+export interface ArchiveList {
+  year: string;
+  list: ArchiveListItem[];
+}
+export interface ArchiveData {
+  count: number;
+  list: ArchiveList | any;
+}
+
 
 // 文章详情
 export interface OtherComments {

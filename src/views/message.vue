@@ -42,7 +42,11 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { MessageParams, RulesItem, Rules } from "@/types/index";
 
-const check = (rule: any, value: string | any, callback: Function | any): any => {
+const check = (
+  rule: any,
+  value: string | any,
+  callback: Function | any
+): any => {
   if (!value) {
     return callback(new Error("邮箱不能为空"));
   }
@@ -153,32 +157,17 @@ export default class Message extends Vue {
       });
       return;
     }
-    let res: any = "";
     this.btnLoading = true;
-    res = await this.$https.post(this.$urls.addMessage, this.params);
+    await this.$https.post(this.$urls.addMessage, this.params);
     this.btnLoading = false;
-    if (res.status === 200) {
-      this.times++;
-      if (res.data.code === 0) {
-        this.cacheTime = nowTime;
-        this.$message({
-          message: "感谢您的留言，有必要的，博主有空都会回复您的 ！",
-          type: "success"
-        });
-        this.params.content = "";
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.times++;
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
-    }
+
+    this.times++;
+    this.cacheTime = nowTime;
+    this.$message({
+      message: "感谢您的留言，有必要的，博主有空都会回复您的 ！",
+      type: "success"
+    });
+    this.params.content = "";
   }
 }
 </script>

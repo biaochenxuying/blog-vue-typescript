@@ -96,7 +96,6 @@ export default class RegisterAndLogin extends Vue {
       name: this.$route.name,
       query: this.$route.query
     };
-    // console.log('preventHistory :', preventHistory)
     window.sessionStorage.preventHistory = JSON.stringify(preventHistory);
     // window.location.href = 'https://github.com/login/oauth/authorize?client_id=6de90ab270aea2bdb01c&redirect_uri=http://biaochenxuying.cn/login'
     window.location.href = `${config.oauth_uri}?client_id=${config.client_id}&redirect_uri=${config.redirect_uri}`;
@@ -152,46 +151,29 @@ export default class RegisterAndLogin extends Vue {
     return false;
   }
   @Emit("ok")
-  private async submit(): Promise<boolean> {
-    let res: any = "";
+  private async submit(): Promise<void> {
+    let data: any = "";
     this.btnLoading = true;
     if (this.handleFlag === "register") {
-      res = await this.$https.post(this.$urls.register, this.params);
+      data = await this.$https.post(this.$urls.register, this.params);
     } else {
-      res = await this.$https.post(this.$urls.login, this.params);
+      data = await this.$https.post(this.$urls.login, this.params);
     }
     this.btnLoading = false;
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: UserInfo = res.data.data;
-        const userInfo: UserInfo = {
-          _id: data._id,
-          name: data.name,
-          avatar: data.avatar
-        };
-        this.$store.commit("SAVE_USER", {
-          userInfo
-        });
-        window.sessionStorage.userInfo = JSON.stringify(userInfo);
-        this.$message({
-          message: res.data.message,
-          type: "success"
-        });
-        return false;
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-        return true;
-      }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
-      return true;
-    }
+
+    const userInfo: UserInfo = {
+      _id: data._id,
+      name: data.name,
+      avatar: data.avatar
+    };
+    this.$store.commit("SAVE_USER", {
+      userInfo
+    });
+    window.sessionStorage.userInfo = JSON.stringify(userInfo);
+    this.$message({
+      message: "操作成功",
+      type: "success"
+    });
   }
 }
 </script>

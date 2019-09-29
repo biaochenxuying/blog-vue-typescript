@@ -60,7 +60,7 @@
 <script lang="ts">
 // 满屏落花效果
 import { Component, Vue } from "vue-property-decorator";
-declare var document: any;
+declare var document: Document | any;
 
 @Component({})
 export default class Home extends Vue {
@@ -70,7 +70,7 @@ export default class Home extends Vue {
         message:
           "本网站已经配置了 https，为了有更好的体验效果，请把地址前缀换成 https 哦",
         type: "warning",
-        duration: 5000
+        duration: 3000
       });
     }
     let sakura_point_vsh: string = `

@@ -146,35 +146,23 @@ export default class Articles extends Vue {
   }
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
-    const res: any = await this.$https.get(this.$urls.getArticleList, {
-      params: this.params
-    });
-    this.isLoading = false;
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        const data: ArticlesData = res.data.data;
-        this.articlesList = [...this.articlesList, ...data.list];
-        this.total = data.count;
-        this.params.pageNum++;
-        this.$nextTick(() => {
-          lazyload();
-        });
-        if (data.list.length === 0 || this.total === this.articlesList.length) {
-          this.isLoadEnd = true;
-          document.removeEventListener("scroll", () => {});
-          window.onscroll = null;
-        }
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
+    const data: ArticlesData = await this.$https.get(
+      this.$urls.getArticleList,
+      {
+        params: this.params
       }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
+    );
+    this.isLoading = false;
+    this.articlesList = [...this.articlesList, ...data.list];
+    this.total = data.count;
+    this.params.pageNum++;
+    this.$nextTick(() => {
+      lazyload();
+    });
+    if (data.list.length === 0 || this.total === this.articlesList.length) {
+      this.isLoadEnd = true;
+      document.removeEventListener("scroll", () => {});
+      window.onscroll = null;
     }
   }
 }

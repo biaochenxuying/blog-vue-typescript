@@ -205,35 +205,20 @@ export default class ArticleDetail extends Vue {
     }
 
     this.btnLoading = true;
-    const res: any = await this.$https.post(this.$urls.addComment, {
+    await this.$https.post(this.$urls.addComment, {
       article_id: this.articleDetail._id,
       user_id,
       content: this.content
     });
     this.btnLoading = false;
-    if (res.status === 200) {
-      this.times++;
-      if (res.data.code === 0) {
-        this.cacheTime = nowTime;
-        this.content = "";
-        this.$message({
-          message: res.data.message,
-          type: "success"
-        });
-        this.handleSearch();
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.times++;
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
-    }
+    this.times++;
+    this.cacheTime = nowTime;
+    this.content = "";
+    this.$message({
+      message: "操作成功",
+      type: "success"
+    });
+    this.handleSearch();
   }
 
   beforeDestroy(): void {
@@ -277,41 +262,24 @@ export default class ArticleDetail extends Vue {
 
   async handleSearch(): Promise<void> {
     this.isLoading = true;
-    const res: any = await this.$https.post(
+    const data: any = await this.$https.post(
       this.$urls.getArticleDetail,
       this.params
     );
     this.isLoading = false;
-    if (res.status === 200) {
-      if (res.data.code === 0) {
-        this.articleDetail = res.data.data;
-        const article = markdown.marked(res.data.data.content);
-        // console.log("this.articleDetail :", this.articleDetail.tags);
-        article.then((res: any) => {
-          this.articleDetail.content = res.content;
-          this.articleDetail.toc = res.toc;
-          // console.log("this.articleDetail.toc :", this.articleDetail.toc);
-        });
-        let keyword = res.data.data.keyword.join(",");
-        let description = res.data.data.desc;
-        let title = res.data.data.title;
-        document.title = title;
-        document.querySelector("#keywords").setAttribute("content", keyword);
-        document
-          .querySelector("#description")
-          .setAttribute("content", description);
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
-    }
+
+    this.articleDetail = data;
+    const article = markdown.marked(data.content);
+    article.then((res: any) => {
+      this.articleDetail.content = res.content;
+      this.articleDetail.toc = res.toc;
+    });
+    let keyword = data.keyword.join(",");
+    let description = data.desc;
+    let title = data.title;
+    document.title = title;
+    document.querySelector("#keywords").setAttribute("content", keyword);
+    document.querySelector("#description").setAttribute("content", description);
   }
 
   async likeArticle(): Promise<void> {
@@ -346,28 +314,15 @@ export default class ArticleDetail extends Vue {
       id: this.articleDetail._id,
       user_id
     };
-    const res: any = await this.$https.post(this.$urls.likeArticle, params);
+    await this.$https.post(this.$urls.likeArticle, params);
     this.isLoading = false;
-    if (res.status === 200) {
-      this.likeTimes++;
-      if (res.data.code === 0) {
-        ++this.articleDetail.meta.likes;
-        this.$message({
-          message: res.data.message,
-          type: "success"
-        });
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
-    }
+
+    this.likeTimes++;
+    ++this.articleDetail.meta.likes;
+    this.$message({
+      message: "操作成功",
+      type: "success"
+    });
   }
 }
 </script>

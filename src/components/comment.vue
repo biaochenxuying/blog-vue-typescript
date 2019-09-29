@@ -105,7 +105,7 @@ export default class Comment extends Vue {
       return;
     }
     this.btnLoading = true;
-    const res: any = await this.$https.post(this.$urls.addThirdComment, {
+    await this.$https.post(this.$urls.addThirdComment, {
       article_id: this.article_id,
       user_id,
       comment_id: this.comment_id,
@@ -113,28 +113,14 @@ export default class Comment extends Vue {
       content: this.content
     });
     this.btnLoading = false;
-    if (res.status === 200) {
-      this.times++;
-      if (res.data.code === 0) {
-        this.cacheTime = nowTime;
-        this.content = "";
-        this.$message({
-          message: res.data.message,
-          type: "success"
-        });
-      } else {
-        this.$message({
-          message: res.data.message,
-          type: "error"
-        });
-      }
-    } else {
-      this.times++;
-      this.$message({
-        message: "网络错误!",
-        type: "error"
-      });
-    }
+    this.times++;
+
+    this.cacheTime = nowTime;
+    this.content = "";
+    this.$message({
+      message: "操作成功",
+      type: "success"
+    });
   }
 }
 </script>
