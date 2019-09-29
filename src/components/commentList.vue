@@ -103,10 +103,6 @@ export default class CommentList extends Vue {
     type: 0
   };
 
-  private formatTime(value: any): string {
-    return timestampToTime(value, true);
-  }
-
   private handleCancel(): void {
     this.visible = false;
   }

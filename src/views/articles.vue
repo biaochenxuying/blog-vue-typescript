@@ -141,9 +141,7 @@ export default class Articles extends Vue {
     // }
     // window.open(url + `article_id=${id}`);
   }
-  private formatTime(value: string | Date): string {
-    return timestampToTime(value, true);
-  }
+  
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const data: ArticlesData = await this.$https.get(

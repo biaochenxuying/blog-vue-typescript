@@ -50,9 +50,6 @@ export default class Archive extends Vue {
     this.handleSearch();
   }
 
-  private formatTime(value: string | Date): string {
-    return timestampToTime(value, true);
-  }
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const data: ArchiveData = await this.$https.get(this.$urls.getArticleList, {

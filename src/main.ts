@@ -26,7 +26,9 @@ import {
   Tag
 } from "element-ui";
 import CollapseTransition from "element-ui/lib/transitions/collapse-transition";
+import mixin from "./mixins";
 
+Vue.mixin(mixin);
 
 // 按需引用 element 组件
 Vue.component(Dialog.name, Dialog);

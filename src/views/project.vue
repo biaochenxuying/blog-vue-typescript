@@ -77,9 +77,6 @@ export default class Timeline extends Vue {
     };
   }
 
-  private formatTime(value: Date | string): string {
-    return timestampToTime(value, true);
-  }
   private async handleSearch(): Promise<void> {
     this.isLoading = true;
     const data: ProjectsData = await this.$https.get(this.$urls.getProjectList, {

@@ -256,10 +256,6 @@ export default class ArticleDetail extends Vue {
   //   next() // needs to be called to confirm the navigation
   // }
 
-  formatTime(value: string | Date): string {
-    return timestampToTime(value, true);
-  }
-
   async handleSearch(): Promise<void> {
     this.isLoading = true;
     const data: any = await this.$https.post(
