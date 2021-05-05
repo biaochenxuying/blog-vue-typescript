@@ -1,0 +1,123 @@
+body {
+	padding: 10px;
+	margin: 0;
+}
+a {
+	text-decoration: none;
+}
+.clearfix:before,
+.clearfix:after {
+	display: table;
+	content: '';
+}
+.layout {
+	display: flex;
+}
+.right {
+	// float: right;
+	width: 350px;
+}
+.left {
+	// float: left;
+	// width: 830px;
+	flex: 1;
+	padding-right: 20px !important;
+}
+.clearfix:after {
+	clear: both;
+}
+.fl {
+	float: left;
+}
+.fr {
+	float: right;
+}
+
+/*对 markdown 样式的补充*/
+pre {
+	display: block;
+	padding: 10px;
+	margin: 0 0 10px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #abb2bf;
+	background: #23241f;
+	word-break: break-all;
+	word-wrap: break-word;
+	overflow: auto;
+	border-radius: 5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-top: 1em;
+}
+strong {
+	font-weight: bold;
+}
+
+p > code:not([class]) {
+	padding: 2px 4px;
+	font-size: 90%;
+	color: #c7254e;
+	background-color: #f9f2f4;
+	border-radius: 4px;
+}
+
+img {
+	max-width: 100%;
+}
+
+.article-detail {
+	img {
+		/* 图片居中 */
+		display: flex;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+	table {
+		text-align: center;
+		border: 1px solid #eee;
+		margin-bottom: 1.5em;
+	}
+	th,
+	td {
+		// text-align: center;
+		padding: 0.5em;
+	}
+	tr:nth-child(2n) {
+		background: #f7f7f7;
+	}
+}
+
+.article-detail {
+	font-size: 16px;
+	line-height: 30px;
+}
+
+.article-detail .desc ul,
+.article-detail .desc ol {
+	color: #333333;
+	margin: 1.5em 0 0 25px;
+}
+
+.article-detail .desc h1,
+.article-detail .desc h2 {
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+}
+
+.article-detail .desc a {
+	color: #009a61;
+}
+
+.article-detail blockquote {
+	margin: 0 0 1em;
+	background-color: rgb(220, 230, 240);
+	padding: 1em 0 0.5em 0.5em;
+	border-left: 6px solid rgb(181, 204, 226);
+}
