@@ -5,8 +5,9 @@ export function throttle(fn: Function, delay: number) {
     timer: any = null;
   // 将throttle处理结果当作函数返回
   return function () {
+    const that: any = (this as any);
     // 保留调用时的this上下文
-    let context = this;
+    let context = that;
     // 保留调用时传入的参数
     let args = arguments;
     // 记录本次触发回调的时间

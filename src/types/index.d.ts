@@ -102,7 +102,7 @@ export interface ArticleDetailIF {
   toc: string;
   _id: string;
   author: string;
-  category: Array<object>;
+  category: Array<any>;
   comments: Array<Comments>;
   create_time: string;
   desc: string;
@@ -111,11 +111,11 @@ export interface ArticleDetailIF {
   img_url: string;
   numbers: number;
   keyword: Array<string>;
-  like_users: Array<object>;
+  like_users: Array<any>;
   meta: Meta;
   origin: number;
   state: number;
-  tags: Array<object>;
+  tags: Array<any>;
   title: string;
   update_time: string;
 }

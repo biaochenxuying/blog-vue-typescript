@@ -1,15 +1,19 @@
-![](https://upload-images.jianshu.io/upload_images/12890819-052c33403c8a0157.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](https://upload-images.jianshu.io/upload_images/12890819-527034962df50506.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ## 简介
 
-此项目是基于 Vue 全家桶 + TypeScript + Element-UI 技术栈的简洁时尚博客网站。
+**项目已经用 Vue3 + TypeScript + Vite2 + Vuex4 + Vue-Router4 + element-plus 重构完啦！**
 
-项目详情请猛戳该文章： [Vue + TypeScript + Element 搭建简洁时尚的博客网站及踩坑记](https://biaochenxuying.cn/articleDetail?article_id=5c9d8ce5f181945ddd6b0ffc)
+Vue2 版本请点这里：[基于 Vue2 全家桶 + TypeScript + Element-UI](https://github.com/biaochenxuying/blog-vue-typescript/tree/vue2) 或者 [v2.0.0](https://github.com/biaochenxuying/blog-vue-typescript/releases/tag/v2.0.0)
 
-TypeScript 具有类型系统，且是 JavaScript 的超集，TypeScript 在 2018年 势头迅猛，可谓遍地开花。
+---
 
-Vue3.0 将使用 TS 重写，重写后的 Vue3.0 将更好的支持 TS。2019 年 TypeScript 将会更加普及，能够熟练掌握 TS，并使用 TS 开发过项目，将更加成为前端开发者的优势。
+此项目是基于 Vue3 全家桶 + TypeScript + element-plus 技术栈的简洁时尚博客网站。
+
+项目详情请猛戳该文章：
+
+- [Vue3 全家桶 + Element Plus + Vite + TypeScript + Eslint 项目配置最佳实践](https://juejin.cn/post/6924687052005081095)
 
 
 ## 效果
@@ -47,29 +51,25 @@ Vue3.0 将使用 TS 重写，重写后的 Vue3.0 将更好的支持 TS。2019 �
 - [x] 移动端适配
 - [x] github 授权登录
 
-### 待优化或者实现
 
-笔者也是刚学的 TypeScript，对 TS 的运用还有待提高，后续会触入更多的 TypeScript 特性。
-
-- [ ] 使用 vuex-class
-- [ ] 更多 TypeScript 的优化技巧
-- [ ] 等出了 Vue3.0，用 Vue3.0 进行重构
-- [ ] 服务器渲染 SSR
+[⬆️ 返回顶部](##简介)
 
 ## 前端主要技术 
 
 所有技术都是当前最新的。
 
-- vue： ^2.6.6
-- typescript : ^3.2.1
-- element-ui： 2.6.3
-- vue-router : ^3.0.1
-- webpack： 4.28.4
-- vuex: ^3.0.1
-- axios：0.18.0
-- highlight.js： 9.15.6
-- marked：0.6.1
+- vue： ^3.0.5
+- typescript : ^4.1.3
+- element-plus: ^1.0.2-beta.41
+- vue-router : ^4.0.6
+- vite: ^2.2.3
+- vuex: ^4.0.0
+- axios: ^0.21.1
+- highlight.js: ^10.7.2
+- marked：^2.0.3
 
+
+[⬆️ 返回顶部](##简介)
 
 ## Build Setup 
 
@@ -90,7 +90,7 @@ npm install
 
 ```
 # Compiles and hot-reloads for development
-npm run serve
+npm run dev
 ```
 
 ```
@@ -102,6 +102,10 @@ npm run build
 如果要看有后台数据完整的效果，是要和后台项目  **[blog-node](https://github.com/biaochenxuying/blog-node)** 一起运行才行的，不然接口请求会失败。
 
 虽然引入了 mock 了，但是还没有时间做模拟数据，想看具体效果，请稳步到我的网站上查看 [https://biaochenxuying.cn](https://biaochenxuying.cn)
+
+
+[⬆️ 返回顶部](##简介)
+
 
 ## 项目地址与文档教程
 
@@ -119,6 +123,7 @@ npm run build
 
 **本博客系统的系列文章：**
 
+- [0. Vue3 全家桶 + Element Plus + Vite + TypeScript + Eslint 项目配置最佳实践](https://juejin.cn/post/6924687052005081095)
 - [1. react + node + express + ant + mongodb 的简洁兼时尚的博客网站](https://biaochenxuying.cn/articleDetail?article_id=5bf57a8f85e0f13af26e579b)
 - [2. react + Ant Design + 支持 markdown 的 blog-react 项目文档说明](https://biaochenxuying.cn/articleDetail?article_id=5bf6bb5e85e0f13af26e57b7)
 - [3. 基于 node + express + mongodb 的 blog-node 项目文档说明](https://biaochenxuying.cn/articleDetail?article_id=5bf8c57185e0f13af26e7d0d)
@@ -129,18 +134,7 @@ npm run build
 - [8. 前端解决第三方图片防盗链的办法 - html referrer 访问图片资源403问题](https://biaochenxuying.cn/articleDetail?article_id=5cfcc6798090bd3c84138a08)
 
 
-## 权衡
-
-如何更好的利用 JS 的动态性和 TS 的静态特质，我们需要结合项目的实际情况来进行综合判断。一些建议：
-
-* 如果是中小型项目，且生命周期不是很长，那就直接用 JS 吧，不要被 TS 束缚住了手脚。
-* 如果是大型应用，且生命周期比较长，那建议试试 TS。
-* 如果是框架、库之类的公共模块，那更建议用 TS 了。
-
-**至于到底用不用TS，还是要看实际项目规模、项目生命周期、团队规模、团队成员情况等实际情况综合考虑。**
-
-其实本项目也是小项目来的，其实并不太适合加入 TypeScript ，不过这个项目是个人的项目，是为了练手用的，所以就无伤大大雅。
-
+[⬆️ 返回顶部](##简介)
 
 ## 服务器
 
@@ -154,7 +148,7 @@ npm run build
 
 特别是大三和大四的学生，买了服务器，搭建个项目给面试官看也香，对找工作和面试都加分，还可以熟悉技术栈。
 
-[想学得快，就得有自己的服务器来折腾才行（低于 1 折、89/年、229/3年，比学生机还便宜）](https://biaochenxuying.cn/articleDetail?article_id=5de65dd90283dc742f8f633a)
+阿里云、腾讯云、华为云 都有，这里购买就是最优惠： [低于 1 折、89/年、229/3年，比学生机还便宜](https://biaochenxuying.cn/articleDetail?article_id=5de65dd90283dc742f8f633a)）
 
 比如笔者的两个网站：
 
@@ -163,12 +157,33 @@ npm run build
 > https://www.kwgg2020.com/
 
 
-## 最后
+[⬆️ 返回顶部](##简介)
 
 
-如果你觉得该项目不错，或者对你有所帮助，点个 Star 、或者真心赞赏一下 都是对我最大的鼓励，我会更有动力维护好该项目。
+## 项目推荐
 
-> **江山父老能容我，不使人间造孽钱**。
 
-![](https://upload-images.jianshu.io/upload_images/12890819-ffab7bd24d08c00d.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+> 专注于挖掘优秀的前端开源项目，抹平你的前端信息不对称的项目：https://github.com/FrontEndGitHub/FrontEndGitHub
 
+> 以最优惠的方式购买极客时间课程：https://github.com/biaochenxuying/preferential-courses ，涵盖了后端、架构、前端、移动、人工智能、大数据、产品、运营、运维、测试等
+
+
+[⬆️ 返回顶部](##简介)
+
+
+## 撩我
+
+如果你觉得该项目不错，或者对你有所帮助，点个 Star，就是对我最大的鼓励，我会更有动力维护好该项目。
+
+
+| 微信 | 公众号 |
+| :------: |  :------: |
+| ID：**CB834301747** <div align="center" style="margin-top: 10px;"> ![CB834301747](https://upload-images.jianshu.io/upload_images/12890819-d4d4cae18ddb84c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/360) </div> | ID：**QuanZhanXiuLian** <div align="center" style="margin-top: 10px;"> ![](https://upload-images.jianshu.io/upload_images/12890819-50b85ba33dd7ba90.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240) </div> |
+
+
+> 欢迎关注微信公众号 “**[全栈修炼](https://upload-images.jianshu.io/upload_images/12890819-9a13b43f4feb8f84.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)**”，回复 “**电子书**” 即可以获得下面 **300** 本技术精华书籍和 **160+** 本前端精华电子书哦。
+
+![](https://upload-images.jianshu.io/upload_images/12890819-62496904db90a9fa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/340)
+
+
+[⬆️ 返回顶部](##简介)

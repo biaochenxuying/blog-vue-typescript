@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { Message } from "element-ui";
+import { ElMessage } from "element-plus";
 
 export interface ResponseData {
   code: number;
@@ -7,9 +7,12 @@ export interface ResponseData {
   message: string;
 }
 
+
+// console.log('import.meta.env: ', import.meta.env);
+
 // 创建 axios 实例
 let service: AxiosInstance | any;
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.MODE === "development") {
   service = axios.create({
     baseURL: "/api", // api 的 base_url
     timeout: 50000 // 请求超时时间
@@ -44,13 +47,13 @@ service.interceptors.response.use(
       if (data.code === 0) {
         return data.data;
       } else {
-        Message({
+        ElMessage({
           message: data.message,
           type: "error"
         });
       }
     } else {
-      Message({
+      ElMessage({
         message: "网络错误!",
         type: "error"
       });

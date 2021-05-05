@@ -1,31 +1,25 @@
-import Vue from "vue";
-import Vuex from "vuex";
-// import * as types from "./types";
+import { InjectionKey } from 'vue'
+import { createStore, Store } from 'vuex'
 import user from "./modules/user";
 
-Vue.use(Vuex);
-const initPageState = () => {
-  return {
-    // user: {
-    //   username: "",
-    //   password: ""
-    // }
-  };
-};
-const store = new Vuex.Store({
-  strict: process.env.NODE_ENV !== "production",
+export interface State {
+  count: number
+}
+
+export const key: InjectionKey<Store<State>> = Symbol()
+
+export const store = createStore<State>({
+  state() {
+    return {
+      count: 0
+    }
+  },
   modules: {
     user
   },
-  state: initPageState(),
   mutations: {
-    // [types.SET_USER](state, pageState = {}) {
-    //   for (const prop in pageState) {
-    //     state[prop] = pageState[prop];
-    //   }
-    // }
-  },
-  actions: {}
-});
-
-export default store;
+    increment(state) {
+      state.count++
+    }
+  }
+})
