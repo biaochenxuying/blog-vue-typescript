@@ -13,7 +13,7 @@ Vue2 版本请点这里：[基于 Vue2 全家桶 + TypeScript + Element-UI](http
 
 项目详情请猛戳该文章：
 
-- [Vue3 全家桶 + Element Plus + Vite + TypeScript + Eslint 项目配置最佳实践](https://juejin.cn/post/6924687052005081095)
+- [Vue3 全家桶 + TS+ Vite2 + element-plus 搭建简洁时尚的博客网站实战及踩坑记](https://biaochenxuying.cn/articleDetail?article_id=6092b45dbec6a37766420fe3)
 
 
 ## 效果
