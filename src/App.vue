@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <Nav v-if="isShowNav" />
+    <Nav v-if="state.isShowNav" />
     <div class="layout">
       <router-view />
-      <CustomSlider v-if="isShowSlider"></CustomSlider>
+      <CustomSlider v-if="state.isShowSlider"></CustomSlider>
     </div>
     <ArrowUp></ArrowUp>
     <!-- <Footer v-if="isShowNav"></Footer> -->
@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineAsyncComponent } from "vue";
+import { defineComponent, defineAsyncComponent, reactive, onMounted } from "vue";
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { isMobileOrPc } from "./utils/utils";
 
 // 移动端 rem 单位适配
@@ -26,80 +27,68 @@ if (isMobileOrPc()) {
 export default defineComponent({
   name: "App",
   components: {
-    Nav: defineAsyncComponent(() =>
-      import('./components/Nav.vue')
+    Nav: defineAsyncComponent(() => import("./components/Nav.vue")),
+    CustomSlider: defineAsyncComponent(
+      () => import("./components/CustomSlider.vue")
     ),
-    CustomSlider: defineAsyncComponent(() =>
-      import('./components/CustomSlider.vue')
-    ),
-    Footer: defineAsyncComponent(() =>
-      import('./components/Footer.vue')
-    ),
-    ArrowUp: defineAsyncComponent(() =>
-      import('./components/Footer.vue')
-    ),
-  },
-  data() {
-    return {
-      isShowNav: false,
-      isShowSlider: false,
-    };
+    Footer: defineAsyncComponent(() => import("./components/Footer.vue")),
+    ArrowUp: defineAsyncComponent(() => import("./components/Footer.vue")),
   },
   watch: {
     $route: function (val: any, oldVal: any) {
       this.routeChange(val, oldVal);
-      // const referrer: any = document.getElementById("referrer");
-      // if (val.path === "/") {
-      //   this.isShowNav = false;
-      //   referrer.setAttribute("content", "always");
-      // } else {
-      //   this.isShowNav = true;
-      //   referrer.setAttribute("content", "never");
-      // }
-      // if (
-      //   val.path === "/articles" ||
-      //   val.path === "/archive" ||
-      //   val.path === "/project" ||
-      //   val.path === "/timeline" ||
-      //   val.path === "/message"
-      // ) {
-      //   this.isShowSlider = true;
-      // } else {
-      //   this.isShowSlider = false;
-      // }
-      // if (isMobileOrPc()) {
-      //   this.isShowSlider = false;
-      // }
     },
   },
-  methods: {
-    routeChange(val: any, oldVal: any): void {
+  setup() {
+    const state = reactive({
+      isShowNav: false,
+      isShowSlider: false,
+    });
+
+    // const router = useRouter();
+    const route = useRoute();
+
+    const routeChange = (val: any, oldVal: any): void => {
       const referrer: any = document.getElementById("referrer");
       if (val.path === "/") {
-        this.isShowNav = false;
+        state.isShowNav = false;
         referrer.setAttribute("content", "always");
       } else {
-        this.isShowNav = true;
+        state.isShowNav = true;
         referrer.setAttribute("content", "never");
       }
-      if (
-        val.path === "/articles" ||
-        val.path === "/archive" ||
-        val.path === "/project" ||
-        val.path === "/timeline" ||
-        val.path === "/message"
-      ) {
-        this.isShowSlider = true;
+      const navs = [
+        "/articles",
+        "/archive",
+        "/archive",
+        "/project",
+        "/timeline",
+        "/message",
+      ];
+      if (navs.includes(val.path)) {
+        state.isShowSlider = true;
       } else {
-        this.isShowSlider = false;
+        state.isShowSlider = false;
       }
       if (isMobileOrPc()) {
-        this.isShowSlider = false;
+        state.isShowSlider = false;
       }
-    },
-  },
-  mounted(): void {
-    this.routeChange(this.$route, this.$route);
+    };
+
+    onMounted(() => {
+        routeChange(route, route);
+    })
+
+    // onBeforeRouteUpdate((to: any, from: any) => {
+    //     console.log(to, "=====");
+    //     console.log(from, "=====");
+    //     routeChange(to, from);
+    // });
+
+    return {
+      state,
+      routeChange,
+    };
   },
 });
 </script>
@@ -109,14 +98,13 @@ export default defineComponent({
 @import url("./less/index.less");
 @import url("./less/mobile.less");
 #app {
-    font-family: Avenir,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: left;
-    color: #2c3e50;
-    width: 1200px;
-    margin: 0 auto;
-    padding-top: 61px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  color: #2c3e50;
+  // width: 1200px;
+  padding-top: 61px;
 }
 img {
   vertical-align: bottom;

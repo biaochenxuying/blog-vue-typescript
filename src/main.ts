@@ -24,6 +24,7 @@ import {
     ElTimelineItem,
     ElCard,
     ElTag,
+    ElIcon,
     ElCollapseTransition
 } from 'element-plus';
 
@@ -47,6 +48,7 @@ app.component(ElDropdownItem.name, ElDropdownItem);
 app.component(ElDropdown.name, ElDropdown);
 app.component(ElCard.name, ElCard);
 app.component(ElTag.name, ElTag);
+app.component(ElIcon.name, ElIcon);
 app.component(ElCollapseTransition.name, ElCollapseTransition);
 
 app.config.globalProperties.$message = ElMessage;

@@ -1,21 +1,21 @@
 <template>
   <div class="left clearfix">
     <h3
-      v-if="params.tag_id"
+      v-if="state.params.tag_id"
       class="left-title"
-    >{{tag_name}} 相关的文章：</h3>
+    >{{state.tag_name}} 相关的文章：</h3>
     <ul
       class="articles-list"
       id="list"
     >
       <transition-group name="el-fade-in">
         <li
-          v-for="(article) in articlesList"
+          v-for="(article) in state.articlesList"
           :key="article._id"
           class="item"
         >
           <a
-            :href="href + article._id"
+            :href="state.href + article._id"
             target="_blank"
           >
             <img
@@ -44,13 +44,15 @@
         </li>
       </transition-group>
     </ul>
-    <LoadingCustom v-if="isLoading"></LoadingCustom>
-    <LoadEnd v-if="isLoadEnd"></LoadEnd>
+    <LoadingCustom v-if="state.isLoading"></LoadingCustom>
+    <LoadEnd v-if="state.isLoadEnd"></LoadEnd>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, onMounted, nextTick } from "vue";
+import service from "../utils/https";
+import urls from "../utils/urls";
 import LoadEnd from "../components/LoadEnd.vue";
 import LoadingCustom from "../components/Loading.vue";
 import {
@@ -95,8 +97,16 @@ export default defineComponent({
     LoadEnd,
     LoadingCustom,
   },
-  data() {
-    return {
+  watch: {
+    $route: {
+      handler(val: any, oldVal: any) {
+        this.routeChange(val, oldVal);
+      },
+      immediate: true,
+    },
+  },
+  setup(props, context) {
+    const state = reactive({
       isLoadEnd: false,
       isLoading: false,
       articlesList: [] as Array<any>,
@@ -114,64 +124,64 @@ export default defineComponent({
       href:
         import.meta.env.MODE === "development"
           ? "http://localhost:3001/articleDetail?article_id="
-          : "https://biaochenxuying.cn/articleDetail?article_id=",
-    };
-  },
-  watch: {
-    $route: {
-      handler(val: any, oldVal: any) {
-        this.routeChange(val, oldVal);
-      },
-      immediate: true,
-    },
-  },
-  methods: {
-    routeChange(val: any, oldVal: any): void {
-      this.tag_name = decodeURI(getQueryStringByName("tag_name"));
-      this.params.tag_id = getQueryStringByName("tag_id");
-      this.params.category_id = getQueryStringByName("category_id");
-      this.articlesList = [];
-      this.params.pageNum = 1;
-      this.handleSearch();
-    },
-    formatTime(value: string | Date): string {
+          : "https://biaochenxuying.cn/articleDetail?article_id="
+    });
+
+    const formatTime = (value: string | Date): string => {
       return timestampToTime(value, true);
-    },
-    async handleSearch() {
-      this.isLoading = true;
-      const data: ArticlesData = await (this as any).$https.get(
-        (this as any).$urls.getArticleList,
+    };
+
+    const handleSearch = async (): Promise<void> => {
+      state.isLoading = true;
+      const data: ArticlesData = await service.get(
+        urls.getArticleList,
         {
-          params: this.params,
+          params: state.params,
         }
       );
-      this.isLoading = false;
-      this.articlesList = [...this.articlesList, ...data.list];
-      this.total = data.count;
-      this.params.pageNum++;
-      this.$nextTick(() => {
+      state.isLoading = false;
+      state.articlesList = [...state.articlesList, ...data.list];
+      state.total = data.count;
+      state.params.pageNum++;
+      nextTick(() => {
         lazyload();
       });
-      if (data.list.length === 0 || this.total === this.articlesList.length) {
-        this.isLoadEnd = true;
+      if (data.list.length === 0 || state.total === state.articlesList.length) {
+        state.isLoadEnd = true;
         document.removeEventListener("scroll", () => {});
         window.onscroll = null;
       }
-    },
-  },
-  mounted(): void {
-    this.handleSearch();
-    window.onscroll = () => {
-      if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 150) {
-        // 如果不是已经没有数据了，都可以继续滚动加载
-        if (this.isLoadEnd === false && this.isLoading === false) {
-          this.handleSearch();
-        }
-      }
     };
-    document.addEventListener("scroll", lazyload);
-  },
-  setup() {},
+
+    const routeChange = (val: any, oldVal: any): void => {
+      state.tag_name = decodeURI(getQueryStringByName("tag_name"));
+      state.params.tag_id = getQueryStringByName("tag_id");
+      state.params.category_id = getQueryStringByName("category_id");
+      state.articlesList = [];
+      state.params.pageNum = 1;
+      handleSearch();
+    }
+
+    onMounted(() => {
+      handleSearch();
+      window.onscroll = () => {
+        if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 100) {
+          // 如果不是已经没有数据了，都可以继续滚动加载
+          if (state.isLoadEnd === false && state.isLoading === false) {
+            handleSearch();
+          }
+        }
+      };
+      document.addEventListener("scroll", lazyload);
+    });
+
+    return {
+      state,
+      formatTime,
+      handleSearch,
+      routeChange
+    };
+  }
 });
 </script>
 

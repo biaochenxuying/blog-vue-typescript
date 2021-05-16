@@ -88,9 +88,9 @@
       </div>
     </div>
     <Comment
-      :visible="visible"
-      :to_user="to_user"
-      :comment_id="comment_id"
+      :visible="state.visible"
+      :to_user="state.to_user"
+      :comment_id="state.comment_id"
       :article_id="article_id"
       @ok="handleOk"
       @cancel="handleCancel"
@@ -98,7 +98,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, defineAsyncComponent } from "vue";
+import { ElMessage } from "element-plus";
+import { defineComponent, defineAsyncComponent, reactive } from "vue";
 import { timestampToTime } from "../utils/utils";
 import { ToUser } from "../types/index";
 
@@ -121,8 +122,8 @@ export default defineComponent({
       default: "",
     },
   },
-  data() {
-    return {
+  setup(props, context) {
+    const state = reactive({
       visible: false,
       comment_id: "",
       to_user: {
@@ -130,28 +131,30 @@ export default defineComponent({
         name: "",
         avatar: "",
         type: 0,
-      } as ToUser,
-    };
-  },
-  methods: {
-    formatTime(value: string | Date): string {
+      }
+    });
+
+    const formatTime = (value: string | Date): string => {
       return timestampToTime(value, true);
-    },
-    handleCancel(): void {
-      this.visible = false;
-    },
-    handleOk(): void {
-      this.visible = false;
-      this.$emit("refreshArticle");
-    },
+    };
+
+    const handleCancel = (): void => {
+      state.visible = false;
+    };
+
+    const handleOk = (): void => {
+      state.visible = false;
+      context.emit("refreshArticle");
+    };
+
     // 添加评论
-    showCommentModal(
+    const showCommentModal = (
       commitId: string,
       user: ToUser,
       secondUser?: ToUser
-    ): boolean | void {
+    ): boolean | void => {
       if (!window.sessionStorage.userInfo) {
-        (this as any).$message({
+        ElMessage({
           message: "登录才能点赞，请先登录！",
           type: "warning",
         });
@@ -159,19 +162,25 @@ export default defineComponent({
       }
       // 添加三级评论
       if (secondUser) {
-        this.visible = true;
-        this.comment_id = commitId;
-        this.to_user = user;
+        state.visible = true;
+        state.comment_id = commitId;
+        state.to_user = user;
       } else {
         // 添加二级评论
-        this.visible = true;
-        this.comment_id = commitId;
-        this.to_user = user;
+        state.visible = true;
+        state.comment_id = commitId;
+        state.to_user = user;
       }
-      console.log("this.visible: ", this.visible);
-    },
+    };
+
+    return {
+      state,
+      showCommentModal,
+      handleOk,
+      handleCancel,
+      formatTime,
+    };
   },
-  setup() {},
 });
 </script>
 <style lang="less" scoped>

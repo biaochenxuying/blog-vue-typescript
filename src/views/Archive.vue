@@ -2,7 +2,7 @@
   <div class="archive left">
     <el-timeline>
       <el-timeline-item
-        v-for="(l, i) in articlesList"
+        v-for="(l, i) in state.articlesList"
         :key="l.year"
         placement="top"
         hide-timestamp
@@ -29,14 +29,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
 import { timestampToTime } from "../utils/utils";
 import { ParamsArchive, ArchiveData } from "../types/index";
+import service from "../utils/https";
+import urls from "../utils/urls";
 
 export default defineComponent({
   name: "Archive",
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       isLoadEnd: false,
       isLoading: false,
       articlesList: [] as Array<any>,
@@ -50,34 +52,40 @@ export default defineComponent({
         category_id: "",
         pageNum: 1,
         pageSize: 10,
-      } as ParamsArchive,
-    };
-  },
-  methods: {
-    formatTime(value: string | Date): string {
+      } as ParamsArchive
+    });
+
+    const formatTime = (value: string | Date): string => {
       return timestampToTime(value, true);
-    },
-    async handleSearch(): Promise<void> {
-      this.isLoading = true;
-      const data: ArchiveData = await (this as any).$https.get(
-        (this as any).$urls.getArticleList,
+    }
+
+    const handleSearch = async (): Promise<void> => {
+      state.isLoading = true;
+      const data: ArchiveData = await service.get(
+        urls.getArticleList,
         {
-          params: this.params,
+          params: state.params,
         }
       );
-      this.isLoading = false;
-      this.articlesList = [...this.articlesList, ...data.list];
-      this.total = data.count;
-      this.params.pageNum++;
-      if (this.total === this.articlesList.length) {
-        this.isLoadEnd = true;
+      state.isLoading = false;
+      state.articlesList = [...state.articlesList, ...data.list];
+      state.total = data.count;
+      state.params.pageNum++;
+      if (state.total === state.articlesList.length) {
+        state.isLoadEnd = true;
       }
-    },
+    }
+
+    onMounted(() => {
+      handleSearch();
+    })
+
+    return {
+      state,
+      formatTime,
+      handleSearch
+    };
   },
-  mounted(): void {
-    this.handleSearch();
-  },
-  setup() {},
 });
 </script>
 <style lang="less" scoped>

@@ -1,5 +1,5 @@
 // url的链接
-export const urls: object = {
+export const urls: any = {
   login: "login",
   logout: "logout",
   register: "register",

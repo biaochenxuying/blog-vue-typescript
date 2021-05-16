@@ -9,35 +9,39 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
 
 export default defineComponent({
   name: "ArrowUp",
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       isShowBtn: false,
-    };
-  },
-  mounted() {
-    // 当网页向下滑动 20px 出现"返回顶部" 按钮
-    window.onscroll = (): void => {
-      if (
-        window.document.body.scrollTop > 100 ||
-        window.document.documentElement.scrollTop > 100
-      ) {
-        this.isShowBtn = true;
-      } else {
-        this.isShowBtn = false;
-      }
-    };
-  },
-  methods: {
-    topFunction(): void {
+    });
+
+    onMounted(() => {
+      // 当网页向下滑动 20px 出现"返回顶部" 按钮
+      window.onscroll = (): void => {
+        if (
+          window.document.body.scrollTop > 100 ||
+          window.document.documentElement.scrollTop > 100
+        ) {
+          state.isShowBtn = true;
+        } else {
+          state.isShowBtn = false;
+        }
+      };
+    });
+
+    const topFunction = (): void => {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
-    },
+    }
+
+    return {
+      state,
+      topFunction
+    };
   },
-  setup() {},
 });
 </script>
 <style scoped>

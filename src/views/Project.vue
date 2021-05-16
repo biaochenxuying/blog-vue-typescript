@@ -3,8 +3,8 @@
     <el-row :gutter="20">
       <el-col
         class="el-col-pointer"
-        :span="isMobileOrPc ? 24 : 12"
-        v-for="(l, index) in list"
+        :span="state.isMobileOrPc ? 24 : 12"
+        v-for="(l, index) in state.list"
         :key="l._id"
         style="margin-bottom: 20px"
       >
@@ -32,20 +32,20 @@
         </a>
       </el-col>
     </el-row>
-    <LoadingCustom v-if="isLoading"></LoadingCustom>
-    <LoadEnd v-if="isLoadEnd"></LoadEnd>
+    <LoadingCustom v-if="state.isLoading"></LoadingCustom>
+    <LoadEnd v-if="state.isLoadEnd"></LoadEnd>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
+import service from "../utils/https";
+import urls from "../utils/urls";
 import LoadEnd from "../components/LoadEnd.vue";
 import LoadingCustom from "../components/Loading.vue";
 import {
-  throttle,
   getScrollTop,
   getDocumentHeight,
   getWindowHeight,
-  getQueryStringByName,
   timestampToTime,
   isMobileOrPc,
 } from "../utils/utils";
@@ -57,8 +57,8 @@ export default defineComponent({
     LoadEnd,
     LoadingCustom,
   },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       reverse: true,
       isLoadEnd: false,
       isLoading: false,
@@ -69,43 +69,46 @@ export default defineComponent({
         keyword: "",
         pageNum: 1,
         pageSize: 10,
-      } as Params,
-    };
-  },
-  mounted(): void {
-    this.handleSearch();
-    window.onscroll = () => {
-      if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 100) {
-        // 如果不是已经没有数据了，都可以继续滚动加载
-        if (this.isLoadEnd === false && this.isLoading === false) {
-          this.handleSearch();
-        }
-      }
-    };
-  },
-  methods: {
-    formatTime(value: string | Date): string {
-      return timestampToTime(value, true);
-    },
-    async handleSearch(): Promise<void> {
-      this.isLoading = true;
-      const data: ProjectsData = await (this as any).$https.get(
-        (this as any).$urls.getProjectList,
-        {
-          params: this.params,
-        }
-      );
-      this.isLoading = false;
+      } as Params
+    });
 
-      this.list = [...this.list, ...data.list];
-      this.total = data.count;
-      this.params.pageNum++;
-      if (this.total === this.list.length) {
-        this.isLoadEnd = true;
+    const formatTime = (value: string | Date): string => {
+      return timestampToTime(value, true);
+    };
+
+    const handleSearch = async (): Promise<void> => {
+      state.isLoading = true;
+      const data: ProjectsData = await service.get(urls.getProjectList, {
+        params: state.params,
+      });
+      state.isLoading = false;
+
+      state.list = [...state.list, ...data.list];
+      state.total = data.count;
+      state.params.pageNum++;
+      if (state.total === state.list.length) {
+        state.isLoadEnd = true;
       }
-    },
-  },
-  setup() {},
+    };
+
+    onMounted(() => {
+      handleSearch();
+      window.onscroll = () => {
+        if (getScrollTop() + getWindowHeight() > getDocumentHeight() - 100) {
+          // 如果不是已经没有数据了，都可以继续滚动加载
+          if (state.isLoadEnd === false && state.isLoading === false) {
+            handleSearch();
+          }
+        }
+      };
+    });
+
+    return {
+      state,
+      formatTime,
+      handleSearch,
+    };
+  }
 });
 </script>
 <style lang="less" scoped>
