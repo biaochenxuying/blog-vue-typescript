@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, onMounted } from "vue";
+import { defineComponent, reactive, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";

@@ -23,7 +23,7 @@
     <div class="tags">
       <div class="title">标签云</div>
       <router-link
-        v-for="item in list"
+        v-for="item in state.list"
         class="item"
         :key="item._id"
         :to="`/articles?tag_id=${item._id}&tag_name=${item.name}&category_id=`"
@@ -56,12 +56,14 @@
 
 <script lang="ts">
 import { Params, TagsData } from "../types/index";
-import { defineComponent } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
+import service from "../utils/https";
+import urls from "../utils/urls";
 
 export default defineComponent({
   name: "CustomSlider",
-  data() {
-    return {
+  setup(props, context) {
+    const state = reactive({
       isLoadEnd: false,
       isLoading: false,
       list: [] as Array<any>,
@@ -71,31 +73,31 @@ export default defineComponent({
         pageNum: 1,
         pageSize: 100,
       } as Params,
-    };
-  },
-  methods: {
-    async handleSearch(): Promise<void> {
-      this.isLoading = true;
-      const data: TagsData = await (this as any).$https.get(
-        (this as any).$urls.getTagList,
-        {
-          params: this.params,
-        }
-      );
-      this.isLoading = false;
+    });
 
-      this.list = [...this.list, ...data.list];
-      this.total = data.count;
-      this.params.pageNum++;
-      if (this.total === this.list.length) {
-        this.isLoadEnd = true;
+    const handleSearch = async (): Promise<void> => {
+      state.isLoading = true;
+      const data: TagsData = await service.get(urls.getTagList, {
+        params: state.params,
+      });
+      state.isLoading = false;
+
+      state.list = [...state.list, ...data.list];
+      state.total = data.count;
+      state.params.pageNum++;
+      if (state.total === state.list.length) {
+        state.isLoadEnd = true;
       }
-    },
-  },
-  mounted(): void {
-    this.handleSearch();
-  },
-  setup() {},
+    };
+
+    onMounted(() => {
+      handleSearch();
+    });
+
+    return {
+      state,
+    };
+  }
 });
 </script>
 

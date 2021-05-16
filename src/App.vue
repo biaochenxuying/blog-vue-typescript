@@ -40,8 +40,6 @@ export default defineComponent({
     },
   },
   setup() {
-    console.log("setup ");
-
     const state = reactive({
       isShowNav: false,
       isShowSlider: false,

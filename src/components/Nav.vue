@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-if="!isMobile"
+      v-if="!state.isMobile"
       class="nav"
     >
       <div class="nav-content">
@@ -18,7 +18,7 @@
           <el-col :span="16">
             <el-menu
               :router="true"
-              :default-active="activeIndex"
+              :default-active="state.activeIndex"
               active-text-color="#409eff"
               class="el-menu-demo"
               mode="horizontal"
@@ -27,7 +27,7 @@
               <el-menuItem
                 :route="l.path"
                 :index="l.index"
-                v-for="l in list"
+                v-for="l in state.list"
                 :key="l.index"
               >
                 {{l.name}}
@@ -95,16 +95,16 @@
             >
           </router-link>
         </div>
-        <div class="title">{{title}}</div>
+        <div class="title">{{state.title}}</div>
         <div
           class="menu"
           @click="handleMenu"
         ><i class="el-icon-menu"></i></div>
       </div>
       <div
-        v-if="isShow"
+        v-if="state.isShow"
         class="nav-mobile-content"
-        :class="{'enter-slideUp': enterSlideUp,'leave-slideDown': leaveSlideDown}"
+        :class="{'enter-slideUp': state.enterSlideUp,'leave-slideDown': state.leaveSlideDown}"
       >
         <div class="list">
           <div
@@ -174,15 +174,15 @@
       </div>
     </div>
     <div
-      v-if="isShow"
+      v-if="state.isShow"
       class="mask"
-      :class="{'mask-fade-out': leaveSlideDown}"
+      :class="{'mask-fade-out': state.leaveSlideDown}"
       @click="handleHideMenu"
     ></div>
     <RegisterAndLogin
-      :visible="visible"
-      :isMobile="isMobile"
-      :handleFlag="handleFlag"
+      :visible="state.visible"
+      :isMobile="state.isMobile"
+      :handleFlag="state.handleFlag"
       @ok="handleOk"
       @cancel="handleCancel"
     ></RegisterAndLogin>
@@ -190,12 +190,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineAsyncComponent } from "vue";
-import { useStore } from 'vuex'
+import { defineComponent, defineAsyncComponent, reactive, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
+import { key } from '../store'
 import { isMobileOrPc, getQueryStringByName } from "../utils/utils";
 import { UserInfo, NavListItem } from "../types/index";
-import service from "../utils/https";
-import urls from "./utils/urls";
+
 
 export default defineComponent({
   name: "Nav",
@@ -204,8 +205,45 @@ export default defineComponent({
       () => import("./RegisterAndLogin.vue")
     ),
   },
-  data() {
-    return {
+  computed: {
+    userInfo(): UserInfo {
+      let userInfo: UserInfo = {
+        _id: "",
+        name: "",
+        avatar: "",
+      };
+      if (window.sessionStorage.userInfo) {
+        userInfo = JSON.parse(window.sessionStorage.userInfo);
+        (this as any).$store.commit("SAVE_USER", {
+          userInfo,
+        });
+      }
+      if ((this as any).$store.state.user.userInfo) {
+        userInfo = (this as any).$store.state.user.userInfo;
+      }
+      return userInfo;
+    },
+  },
+  watch: {
+    $route: {
+      handler(val: any, oldVal: any) {
+        this.routeChange(val, oldVal);
+      },
+      immediate: true,
+    },
+  },
+  mounted() {
+    // 授权登录的，有 code 参数
+    this.routeChange(this.$route, this.$route);
+    const code: string = getQueryStringByName("code");
+    if (code) {
+      this.getUser(code);
+    }
+  },
+  setup(props, context) {
+    const store = useStore(key);
+    const router = useRouter();
+    const state = reactive({
       visible: false,
       handleFlag: "",
       title: "首页",
@@ -250,74 +288,69 @@ export default defineComponent({
       enterSlideUp: false,
       leaveSlideDown: false,
       isShow: false,
-      isMobile: isMobileOrPc(),
-    };
-  },
-  computed: {
-    userInfo(): UserInfo {
-      let userInfo: UserInfo = {
-        _id: "",
-        name: "",
-        avatar: "",
-      };
-      if (window.sessionStorage.userInfo) {
-        userInfo = JSON.parse(window.sessionStorage.userInfo);
-        (this as any).$store.commit("SAVE_USER", {
-          userInfo,
-        });
-      }
-      if ((this as any).$store.state.user.userInfo) {
-        userInfo = (this as any).$store.state.user.userInfo;
-      }
-      return userInfo;
-    },
-  },
-  watch: {
-    $route: {
-      handler(val: any, oldVal: any) {
-        this.routeChange(val, oldVal);
-      },
-      immediate: true,
-    },
-  },
-  methods: {
-    routeChange(val: any, oldVal: any) {
-      for (let i = 0; i < this.list.length; i++) {
-        const l: NavListItem = this.list[i];
+      isMobile: isMobileOrPc()
+    });
+
+    const routeChange = (val: any, oldVal: any) => {
+      for (let i = 0; i < state.list.length; i++) {
+        const l: NavListItem = state.list[i];
         if (l.path === val.path) {
-          this.activeIndex = i + 1 + "";
-          this.title = l.name;
+          state.activeIndex = i + 1 + "";
+          state.title = l.name;
           break;
         }
       }
-    },
-    handleClickMenu(route?: string): void {
-      this.isShow = false;
+    }
+
+    const handleSelect = (val: string, oldVal: string): void => {
+      state.activeIndex = val;
+    };
+
+    const handleOk = (value: boolean): void => {
+      state.visible = value;
+    };
+
+    const handleCancel = (value: boolean): void => {
+      state.visible = value;
+    };
+
+    const handleClick = (value: string): void => {
+      state.handleFlag = value;
+      state.visible = true;
+    }
+
+    const handleLogout = (): void => {
+      window.sessionStorage.userInfo = "";
+      store.commit("SAVE_USER", {
+        userInfo: {
+          _id: "",
+          name: "",
+          avatar: "",
+        },
+      });
+    }
+
+    const handleClickMenu = (route?: string): void => {
+      state.isShow = false;
       if (route === "/login") {
-        this.handleFlag = "login";
-        this.visible = true;
+        state.handleFlag = "login";
+        state.visible = true;
       }
       if (route === "/register") {
-        this.handleFlag = "register";
-        this.visible = true;
+        state.handleFlag = "register";
+        state.visible = true;
       }
       if (route === "/logout") {
-        this.handleLogout();
+        handleLogout();
       }
-    },
-    handleMenu(): void {
-      this.isShow = true;
-      this.enterSlideUp = true;
-    },
-    handleHideMenu(): void {
-      this.enterSlideUp = false;
-      this.leaveSlideDown = true;
-      setTimeout(() => {
-        this.leaveSlideDown = false;
-        this.isShow = false;
-      }, 300);
-    },
-    async getUser(code: string): Promise<void> {
+    }
+
+    const handleMenu = (): void => {
+      state.isShow = true;
+      state.enterSlideUp = true;
+    }
+
+    const getUser = async (code: string): Promise<void> => {
       const loading: any = (this as any).$loading({
         lock: true,
         text: "Loading",
@@ -346,45 +379,35 @@ export default defineComponent({
       });
       let preventHistory = JSON.parse(window.sessionStorage.preventHistory);
       if (preventHistory) {
-        this.$router.push({
+        router.push({
           path: preventHistory.name,
           query: preventHistory.query,
         });
       }
-    },
-    handleLogout(): void {
-      window.sessionStorage.userInfo = "";
-      (this as any).$store.commit("SAVE_USER", {
-        userInfo: {
-          _id: "",
-          name: "",
-          avatar: "",
-        },
-      });
-    },
-    handleClick(value: string): void {
-      this.handleFlag = value;
-      this.visible = true;
-    },
-    handleCancel(value: boolean): void {
-      this.visible = value;
-    },
-    handleOk(value: boolean): void {
-      this.visible = value;
-    },
-    handleSelect(val: string, oldVal: string): void {
-      this.activeIndex = val;
-    },
-  },
-  mounted() {
-    // 授权登录的，有 code 参数
-    this.routeChange(this.$route, this.$route);
-    const code: string = getQueryStringByName("code");
-    if (code) {
-      this.getUser(code);
     }
-  },
-  setup() {},
+
+    const handleHideMenu = (): void => {
+      state.enterSlideUp = false;
+      state.leaveSlideDown = true;
+      setTimeout(() => {
+        state.leaveSlideDown = false;
+        state.isShow = false;
+      }, 300);
+    }
+
+    return {
+      state,
+      handleCancel,
+      handleOk,
+      handleClick,
+      handleLogout,
+      handleClickMenu,
+      handleMenu,
+      getUser,
+      handleSelect,
+      routeChange
+    };
+  }
 });
 </script>
 

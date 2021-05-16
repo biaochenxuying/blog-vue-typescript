@@ -2,12 +2,12 @@
   <div style="width: 100%">
     <div class="article clearfix">
       <div
-        v-show="!isLoading"
-        :style="{'width': isMobileOrPc ? '100%' : '75%'}"
+        v-show="!state.isLoading"
+        :style="{'width': state.isMobileOrPc ? '100%' : '75%'}"
         class="article-left fl"
       >
         <div class="header">
-          <h1 class="title">{{articleDetail.title}}</h1>
+          <h1 class="title">{{state.articleDetail.title}}</h1>
           <div class="author">
             <div class="avatar">
               <img
@@ -18,7 +18,7 @@
             </div>
             <div class="info">
               <span class="name">
-                <span>{{articleDetail.author}}</span>
+                <span>{{state.articleDetail.author}}</span>
               </span>
               <div
                 props-data-classes="user-follow-button-header"
@@ -26,19 +26,19 @@
               />
               <div class="meta">
                 <span class="publish-time">
-                  {{articleDetail.create_time? formatTime(articleDetail.create_time): ''}}
+                  {{state.articleDetail.create_time? formatTime(state.articleDetail.create_time): ''}}
                 </span>
                 <span class="wordage">
-                  字数 {{articleDetail.numbers}}
+                  字数 {{state.articleDetail.numbers}}
                 </span>
                 <span class="views-count">
-                  阅读 {{articleDetail.meta.views}}
+                  阅读 {{state.articleDetail.meta.views}}
                 </span>
                 <span class="comments-count">
-                  评论 {{articleDetail.meta.comments}}
+                  评论 {{state.articleDetail.meta.comments}}
                 </span>
                 <span class="likes-count">
-                  喜欢 {{articleDetail.meta.likes}}
+                  喜欢 {{state.articleDetail.meta.likes}}
                 </span>
               </div>
             </div>
@@ -48,7 +48,7 @@
             >
               <el-tag
                 size="mini"
-                v-for="tag in articleDetail.tags"
+                v-for="tag in state.articleDetail.tags"
                 :key="tag._id"
                 class="tag"
                 type="success"
@@ -61,7 +61,7 @@
           <div
             id="content"
             class="article-detail"
-            v-html="articleDetail.content"
+            v-html="state.articleDetail.content"
           >
           </div>
         </div>
@@ -70,7 +70,7 @@
             type="danger"
             size="large"
             icon="heart"
-            :loading="isLoading"
+            :loading="state.isLoading"
             @click="likeArticle"
           >
             点赞
@@ -80,40 +80,40 @@
           <el-input
             placeholder="文明社会，理性评论"
             type="textarea"
-            v-model="content"
+            v-model="state.content"
           ></el-input>
           <el-button
             style="margin-top: 15px"
             type="primary"
-            :loading="btnLoading"
+            :loading="state.btnLoading"
             @click="handleAddComment"
           >发 送</el-button>
         </div>
         <CommentList
-          v-if="!isLoading"
-          :numbers="articleDetail.meta.comments"
-          :list="articleDetail.comments"
-          :article_id="articleDetail._id"
+          v-if="!state.isLoading"
+          :numbers="state.articleDetail.meta.comments"
+          :list="state.articleDetail.comments"
+          :article_id="state.articleDetail._id"
           @refreshArticle="refreshArticle"
         />
       </div>
       <div
-        v-if="!isMobileOrPc"
+        v-if="!state.isMobileOrPc"
         style="width: 23%"
         class="article-right fr anchor"
-        v-html="articleDetail.toc"
+        v-html="state.articleDetail.toc"
       ></div>
-      <LoadingCustom v-if="isLoading"></LoadingCustom>
+      <LoadingCustom v-if="state.isLoading"></LoadingCustom>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
-import {
-  timestampToTime,
-  getQueryStringByName,
-  isMobileOrPc,
-} from "../utils/utils";
+import { defineComponent, reactive, onMounted } from "vue";
+import service from "../utils/https";
+import urls from "../utils/urls";
+import { ElMessage } from "element-plus";
+import { useRoute } from "vue-router";
+import { timestampToTime, isMobileOrPc } from "../utils/utils";
 import markdown from "../utils/markdown";
 import LoadingCustom from "../components/Loading.vue";
 import CommentList from "../components/CommentList.vue";
@@ -131,8 +131,8 @@ export default defineComponent({
     LoadingCustom,
     CommentList,
   },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       btnLoading: false,
       isLoadEnd: false,
       isLoading: false,
@@ -166,98 +166,22 @@ export default defineComponent({
       cacheTime: 0, // 缓存时间
       times: 0, // 评论次数
       likeTimes: 0, // 点赞次数
-    };
-  },
-  mounted(): void {
-    this.params.id = this.$route.query.article_id as string;
-    // this.params.id = "5c8cfe5d26bb39b22d3a7aec";
-    if (this.$route.path === "/about") {
-      this.params.type = 3;
-    }
-    this.handleSearch();
-  },
-  methods: {
-    formatTime(value: string | Date): string {
+    });
+
+    const formatTime = (value: string | Date): string => {
       return timestampToTime(value, true);
-    },
-    refreshArticle(): void {
-      this.handleSearch();
-    },
-    async handleAddComment(): Promise<void> {
-      if (!this.articleDetail._id) {
-        (this as any).$message({
-          message: "该文章不存在！",
-          type: "error",
-        });
-        return;
-      }
+    };
 
-      if (this.times > 2) {
-        (this as any).$message({
-          message: "您今天评论的次数已经用完，明天再来评论吧！",
-          type: "warning",
-        });
-        return;
-      }
+    const handleSearch = async (): Promise<void> => {
+      state.isLoading = true;
+      const data: any = await service.post(urls.getArticleDetail, state.params);
+      state.isLoading = false;
 
-      let now = new Date();
-      let nowTime = now.getTime();
-      if (nowTime - this.cacheTime < 4000) {
-        (this as any).$message({
-          message: "您评论太过频繁，1 分钟后再来留言吧！",
-          type: "warning",
-        });
-        return;
-      }
-
-      if (!this.content) {
-        (this as any).$message({
-          message: "请输入内容!",
-          type: "warning",
-        });
-        return;
-      }
-      let user_id = "";
-      if (window.sessionStorage.userInfo) {
-        let userInfo = JSON.parse(window.sessionStorage.userInfo);
-        user_id = userInfo._id;
-      } else {
-        (this as any).$message({
-          message: "登录才能评论，请先登录！",
-          type: "warning",
-        });
-        return;
-      }
-
-      this.btnLoading = true;
-      await (this as any).$https.post((this as any).$urls.addComment, {
-        article_id: this.articleDetail._id,
-        user_id,
-        content: this.content,
-      });
-      this.btnLoading = false;
-      this.times++;
-      this.cacheTime = nowTime;
-      this.content = "";
-      (this as any).$message({
-        message: "操作成功",
-        type: "success",
-      });
-      this.handleSearch();
-    },
-    async handleSearch(): Promise<void> {
-      this.isLoading = true;
-      const data: any = await (this as any).$https.post(
-        (this as any).$urls.getArticleDetail,
-        this.params
-      );
-      this.isLoading = false;
-
-      this.articleDetail = data;
+      state.articleDetail = data;
       const article = markdown.marked(data.content);
       article.then((res: any) => {
-        this.articleDetail.content = res.content;
-        this.articleDetail.toc = res.toc;
+        state.articleDetail.content = res.content;
+        state.articleDetail.toc = res.toc;
       });
       let keyword = data.keyword.join(",");
       let description = data.desc;
@@ -267,18 +191,23 @@ export default defineComponent({
       document
         .querySelector("#description")
         .setAttribute("content", description);
-    },
-    async likeArticle(): Promise<void> {
-      if (!this.articleDetail._id) {
-        (this as any).$message({
+    };
+
+    const refreshArticle = (): void => {
+      handleSearch();
+    };
+
+    const likeArticle = async (): Promise<void> => {
+      if (!state.articleDetail._id) {
+        ElMessage({
           message: "该文章不存在！",
           type: "warning",
         });
         return;
       }
 
-      if (this.likeTimes > 0) {
-        (this as any).$message({
+      if (state.likeTimes > 0) {
+        ElMessage({
           message: "您已经点过赞了！悠着点吧！",
           type: "warning",
         });
@@ -290,28 +219,108 @@ export default defineComponent({
         let userInfo = JSON.parse(window.sessionStorage.userInfo);
         user_id = userInfo._id;
       } else {
-        (this as any).$message({
+        ElMessage({
           message: "登录才能点赞，请先登录！",
           type: "warning",
         });
         return;
       }
       let params: LikeParams = {
-        id: this.articleDetail._id,
+        id: state.articleDetail._id,
         user_id,
       };
-      await (this as any).$https.post((this as any).$urls.likeArticle, params);
-      this.isLoading = false;
+      await service.post(urls.likeArticle, params);
+      state.isLoading = false;
 
-      this.likeTimes++;
-      ++this.articleDetail.meta.likes;
-      (this as any).$message({
+      state.likeTimes++;
+      ++state.articleDetail.meta.likes;
+      ElMessage({
         message: "操作成功",
         type: "success",
       });
-    },
+    };
+
+    const handleAddComment = async (): Promise<void> => {
+      if (!state.articleDetail._id) {
+        ElMessage({
+          message: "该文章不存在！",
+          type: "error",
+        });
+        return;
+      }
+
+      if (state.times > 2) {
+        ElMessage({
+          message: "您今天评论的次数已经用完，明天再来评论吧！",
+          type: "warning",
+        });
+        return;
+      }
+
+      let now = new Date();
+      let nowTime = now.getTime();
+      if (nowTime - state.cacheTime < 4000) {
+        ElMessage({
+          message: "您评论太过频繁，1 分钟后再来留言吧！",
+          type: "warning",
+        });
+        return;
+      }
+
+      if (!state.content) {
+        ElMessage({
+          message: "请输入内容!",
+          type: "warning",
+        });
+        return;
+      }
+      let user_id = "";
+      if (window.sessionStorage.userInfo) {
+        let userInfo = JSON.parse(window.sessionStorage.userInfo);
+        user_id = userInfo._id;
+      } else {
+        ElMessage({
+          message: "登录才能评论，请先登录！",
+          type: "warning",
+        });
+        return;
+      }
+
+      state.btnLoading = true;
+      await service.post(urls.addComment, {
+        article_id: state.articleDetail._id,
+        user_id,
+        content: state.content,
+      });
+      state.btnLoading = false;
+      state.times++;
+      state.cacheTime = nowTime;
+      state.content = "";
+      ElMessage({
+        message: "操作成功",
+        type: "success",
+      });
+      handleSearch();
+    };
+
+    const route = useRoute();
+    onMounted(() => {
+      state.params.id = route.query.article_id as string;
+      if (route.path === "/about") {
+        state.params.type = 3;
+      }
+      handleSearch();
+    });
+
+    return {
+      state,
+      formatTime,
+      handleSearch,
+      handleAddComment,
+      likeArticle,
+      refreshArticle,
+    };
   },
-  setup() {},
   beforeUnmount(): void {
     document.title = "夜尽天明的博客网站";
     document

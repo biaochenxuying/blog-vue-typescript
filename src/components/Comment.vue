@@ -145,7 +145,7 @@ export default defineComponent({
     return {
       state,
       cancel,
-      handleOk
+      handleOk,
     };
   },
 });

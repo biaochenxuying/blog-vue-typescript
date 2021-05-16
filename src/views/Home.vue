@@ -48,7 +48,7 @@
             target="_blank"
             rel="noopener noreferrer"
             class="link"
-            href="https://www.zhihu.com/people/gu-jian-qi-tan-shui/activities"
+            href="https://www.zhihu.com/people/mo-xu-ming-53/posts"
           >
             知乎
           </a>

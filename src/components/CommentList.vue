@@ -99,11 +99,7 @@
 </template>
 <script lang="ts">
 import { ElMessage } from "element-plus";
-import {
-  defineComponent,
-  defineAsyncComponent,
-  reactive,
-} from "vue";
+import { defineComponent, defineAsyncComponent, reactive } from "vue";
 import { timestampToTime } from "../utils/utils";
 import { ToUser } from "../types/index";
 
@@ -182,7 +178,7 @@ export default defineComponent({
       showCommentModal,
       handleOk,
       handleCancel,
-      formatTime
+      formatTime,
     };
   },
 });
