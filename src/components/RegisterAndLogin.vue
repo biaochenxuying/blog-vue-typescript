@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     title="登录"
-    :width="state.isMobile ? '90%' : '50%'"
+    :width="isMobile ? '90%' : '50%'"
     v-model="state.dialogDodel"
     @close="cancel"
     :show-close="true"
