@@ -190,13 +190,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, defineAsyncComponent, reactive, onMounted } from "vue";
+import {
+  defineComponent,
+  defineAsyncComponent,
+  reactive,
+} from "vue";
+import service from "../utils/https";
+import urls from "../utils/urls";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { key } from '../store'
+import { ElLoading, ElMessage } from "element-plus";
+import { key } from "../store";
 import { isMobileOrPc, getQueryStringByName } from "../utils/utils";
 import { UserInfo, NavListItem } from "../types/index";
-
 
 export default defineComponent({
   name: "Nav",
@@ -288,7 +294,7 @@ export default defineComponent({
       enterSlideUp: false,
       leaveSlideDown: false,
       isShow: false,
-      isMobile: isMobileOrPc()
+      isMobile: isMobileOrPc(),
     });
 
     const routeChange = (val: any, oldVal: any) => {
@@ -300,7 +306,7 @@ export default defineComponent({
           break;
         }
       }
-    }
+    };
 
     const handleSelect = (val: string, oldVal: string): void => {
       state.activeIndex = val;
@@ -317,7 +323,7 @@ export default defineComponent({
     const handleClick = (value: string): void => {
       state.handleFlag = value;
       state.visible = true;
-    }
+    };
 
     const handleLogout = (): void => {
       window.sessionStorage.userInfo = "";
@@ -328,7 +334,7 @@ export default defineComponent({
           avatar: "",
         },
       });
-    }
+    };
 
     const handleClickMenu = (route?: string): void => {
       state.isShow = false;
@@ -343,22 +349,22 @@ export default defineComponent({
       if (route === "/logout") {
         handleLogout();
       }
-    }
+    };
 
     const handleMenu = (): void => {
       state.isShow = true;
       state.enterSlideUp = true;
-    }
+    };
 
     const getUser = async (code: string): Promise<void> => {
-      const loading: any = (this as any).$loading({
+      const loading: any = ElLoading.service({
         lock: true,
         text: "Loading",
         spinner: "el-icon-loading",
         background: "rgba(255, 255, 255, 0.7)",
       });
-      const data: UserInfo = await (this as any).$https.post(
-        (this as any).$urls.getUser,
+      const data: UserInfo = await service.post(
+        urls.getUser,
         { code },
         { withCredentials: true }
       );
@@ -369,11 +375,11 @@ export default defineComponent({
         name: data.name,
         avatar: data.avatar,
       };
-      (this as any).$store.commit("SAVE_USER", {
+      store.commit("SAVE_USER", {
         userInfo,
       });
       window.sessionStorage.userInfo = JSON.stringify(userInfo);
-      (this as any).$message({
+      ElMessage({
         message: "操作成功",
         type: "success",
       });
@@ -384,7 +390,7 @@ export default defineComponent({
           query: preventHistory.query,
         });
       }
-    }
+    };
 
     const handleHideMenu = (): void => {
       state.enterSlideUp = false;
@@ -393,7 +399,7 @@ export default defineComponent({
         state.leaveSlideDown = false;
         state.isShow = false;
       }, 300);
-    }
+    };
 
     return {
       state,
@@ -405,9 +411,10 @@ export default defineComponent({
       handleMenu,
       getUser,
       handleSelect,
-      routeChange
+      routeChange,
+      handleHideMenu
     };
-  }
+  },
 });
 </script>
 

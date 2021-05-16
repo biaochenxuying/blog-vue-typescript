@@ -76,7 +76,6 @@ export default defineComponent({
     };
 
     onMounted(() => {
-        // console.log('mounted!');
         routeChange(route, route);
     })
 
