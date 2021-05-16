@@ -191,8 +191,11 @@
 
 <script lang="ts">
 import { defineComponent, defineAsyncComponent } from "vue";
+import { useStore } from 'vuex'
 import { isMobileOrPc, getQueryStringByName } from "../utils/utils";
 import { UserInfo, NavListItem } from "../types/index";
+import service from "../utils/https";
+import urls from "./utils/urls";
 
 export default defineComponent({
   name: "Nav",

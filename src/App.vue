@@ -34,46 +34,11 @@ export default defineComponent({
     Footer: defineAsyncComponent(() => import("./components/Footer.vue")),
     ArrowUp: defineAsyncComponent(() => import("./components/Footer.vue")),
   },
-  // data() {
-  //   return {
-  //     isShowNav: false,
-  //     isShowSlider: false,
-  //   };
-  // },
   watch: {
     $route: function (val: any, oldVal: any) {
       this.routeChange(val, oldVal);
     },
   },
-  methods: {
-    // routeChange(val: any, oldVal: any): void {
-    //   const referrer: any = document.getElementById("referrer");
-    //   if (val.path === "/") {
-    //     this.isShowNav = false;
-    //     referrer.setAttribute("content", "always");
-    //   } else {
-    //     this.isShowNav = true;
-    //     referrer.setAttribute("content", "never");
-    //   }
-    //   if (
-    //     val.path === "/articles" ||
-    //     val.path === "/archive" ||
-    //     val.path === "/project" ||
-    //     val.path === "/timeline" ||
-    //     val.path === "/message"
-    //   ) {
-    //     this.isShowSlider = true;
-    //   } else {
-    //     this.isShowSlider = false;
-    //   }
-    //   if (isMobileOrPc()) {
-    //     this.isShowSlider = false;
-    //   }
-    // },
-  },
-  // mounted(): void {
-  //   this.routeChange(this.$route, this.$route);
-  // },
   setup() {
     console.log("setup ");
 
@@ -82,7 +47,7 @@ export default defineComponent({
       isShowSlider: false,
     });
 
-    const router = useRouter();
+    // const router = useRouter();
     const route = useRoute();
 
     const routeChange = (val: any, oldVal: any): void => {
@@ -126,7 +91,6 @@ export default defineComponent({
     return {
       state,
       routeChange,
-      // click
     };
   },
 });
@@ -142,8 +106,7 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
   color: #2c3e50;
-  width: 1200px;
-  margin: 0 auto;
+  // width: 1200px;
   padding-top: 61px;
 }
 img {
