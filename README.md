@@ -123,6 +123,7 @@ npm run build
 
 **本博客系统的系列文章：**
 
+- [0. Vue3 全家桶 + TS+ Vite2 + element-plus 搭建简洁时尚的博客网站实战及踩坑记](https://juejin.cn/post/6959174069577220110)
 - [0. Vue3 全家桶 + Element Plus + Vite + TypeScript + Eslint 项目配置最佳实践](https://juejin.cn/post/6924687052005081095)
 - [1. react + node + express + ant + mongodb 的简洁兼时尚的博客网站](https://juejin.cn/post/6844903718345768973)
 - [2. react + Ant Design + 支持 markdown 的 blog-react 项目文档说明](https://juejin.cn/post/6844903719260127239)
