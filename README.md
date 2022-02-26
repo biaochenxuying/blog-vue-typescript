@@ -13,7 +13,7 @@ Vue2 版本请点这里：[基于 Vue2 全家桶 + TypeScript + Element-UI](http
 
 项目详情请猛戳该文章：
 
-- [Vue3 全家桶 + TS+ Vite2 + element-plus 搭建简洁时尚的博客网站实战及踩坑记](https://biaochenxuying.cn/articleDetail?article_id=6092b45dbec6a37766420fe3)
+- [Vue3 全家桶 + TS+ Vite2 + element-plus 搭建简洁时尚的博客网站实战及踩坑记](https://juejin.cn/post/6924687052005081095)
 
 
 ## 效果
@@ -30,7 +30,7 @@ Vue2 版本请点这里：[基于 Vue2 全家桶 + TypeScript + Element-UI](http
 ![](https://upload-images.jianshu.io/upload_images/12890819-5370ed6dfbe61051.gif?imageMogr2/auto-orient/strip)
 
 
-完整效果请看：[https://biaochenxuying.cn](https://biaochenxuying.cn)
+<!-- 完整效果请看：[https://biaochenxuying.cn](https://biaochenxuying.cn) -->
 
 
 ## 功能
@@ -101,7 +101,7 @@ npm run build
 
 如果要看有后台数据完整的效果，是要和后台项目  **[blog-node](https://github.com/biaochenxuying/blog-node)** 一起运行才行的，不然接口请求会失败。
 
-虽然引入了 mock 了，但是还没有时间做模拟数据，想看具体效果，请稳步到我的网站上查看 [https://biaochenxuying.cn](https://biaochenxuying.cn)
+<!-- 虽然引入了 mock 了，但是还没有时间做模拟数据，想看具体效果，请稳步到我的网站上查看 [https://biaochenxuying.cn](https://biaochenxuying.cn) -->
 
 
 [⬆️ 返回顶部](##简介)
@@ -124,18 +124,19 @@ npm run build
 **本博客系统的系列文章：**
 
 - [0. Vue3 全家桶 + Element Plus + Vite + TypeScript + Eslint 项目配置最佳实践](https://juejin.cn/post/6924687052005081095)
-- [1. react + node + express + ant + mongodb 的简洁兼时尚的博客网站](https://biaochenxuying.cn/articleDetail?article_id=5bf57a8f85e0f13af26e579b)
-- [2. react + Ant Design + 支持 markdown 的 blog-react 项目文档说明](https://biaochenxuying.cn/articleDetail?article_id=5bf6bb5e85e0f13af26e57b7)
-- [3. 基于 node + express + mongodb 的 blog-node 项目文档说明](https://biaochenxuying.cn/articleDetail?article_id=5bf8c57185e0f13af26e7d0d)
-- [4. 服务器小白的我,是如何将 node+mongodb 项目部署在服务器上并进行性能优化的](https://biaochenxuying.cn/articleDetail?article_id=5bfa728bb54f044b4f9da240)
-- [5. github 授权登录教程与如何设计第三方授权登录的用户表](https://biaochenxuying.cn/articleDetail?article_id=5c7bd34e42b55e2ecc90976d)
-- [6. 一次网站的性能优化之路 -- 天下武功，唯快不破](https://biaochenxuying.cn/articleDetail?article_id=5c8ca2d3b87b8a04f1860c9a)
-- [7. Vue + TypeScript + Element 搭建简洁时尚的博客网站及踩坑记](https://biaochenxuying.cn/articleDetail?article_id=5c9d8ce5f181945ddd6b0ffc)
-- [8. 前端解决第三方图片防盗链的办法 - html referrer 访问图片资源403问题](https://biaochenxuying.cn/articleDetail?article_id=5cfcc6798090bd3c84138a08)
+- [1. react + node + express + ant + mongodb 的简洁兼时尚的博客网站](https://juejin.cn/post/6844903718345768973)
+- [2. react + Ant Design + 支持 markdown 的 blog-react 项目文档说明](https://juejin.cn/post/6844903719260127239)
+- [3. 基于 node + express + mongodb 的 blog-node 项目文档说明](https://juejin.cn/post/6844903721680240653)
+- [4. 服务器小白的我,是如何将 node+mongodb 项目部署在服务器上并进行性能优化的](https://juejin.cn/post/6844903721827041293)
+- [5. github 授权登录教程与如何设计第三方授权登录的用户表](https://juejin.cn/post/6844903789091094542)
+- [6. 一次网站的性能优化之路 -- 天下武功，唯快不破](https://juejin.cn/post/6844903798692020237)
+- [7. Vue + TypeScript + Element 搭建简洁时尚的博客网站及踩坑记](https://juejin.cn/post/6844903810457042957)
+- [8. 前端解决第三方图片防盗链的办法 - html referrer 访问图片资源403问题](https://juejin.cn/post/6844903869755949069)
 
 
 [⬆️ 返回顶部](##简介)
-<!-- 
+
+
 ## 服务器
 
 笔者觉得每个开发者都应该拥有自己的网站和服务器，这可是很酷的事情，学习 Linux、跑跑脚本、建站、搭博客啥的都行啊。
@@ -148,19 +149,19 @@ npm run build
 
 特别是大三和大四的学生，买了服务器，搭建个项目给面试官看也香，对找工作和面试都加分，还可以熟悉技术栈。
 
-阿里云、腾讯云、华为云 都有，这里购买就是最优惠： [低于 1 折、89/年、229/3年，比学生机还便宜](https://biaochenxuying.cn/articleDetail?article_id=5de65dd90283dc742f8f633a)）
+阿里云、腾讯云、华为云 都有，这里购买就是最优惠： [低于 1 折、89/年、229/3年，比学生机还便宜](https://github.com/biaochenxuying/biaochenxuying/issues/1)）
 
 比如笔者的两个网站：
 
-> https://biaochenxuying.cn/
+<!-- > https://biaochenxuying.cn/ -->
 
 > https://www.kwgg2020.com/
 
 
-[⬆️ 返回顶部](##简介) -->
+[⬆️ 返回顶部](##简介)
 
 
-<!-- ## 项目推荐
+## 项目推荐
 
 
 > 专注于挖掘优秀的前端开源项目，抹平你的前端信息不对称的项目：https://github.com/FrontEndGitHub/FrontEndGitHub
@@ -168,7 +169,7 @@ npm run build
 > 以最优惠的方式购买极客时间课程：https://github.com/biaochenxuying/preferential-courses ，涵盖了后端、架构、前端、移动、人工智能、大数据、产品、运营、运维、测试等
 
 
-[⬆️ 返回顶部](##简介) -->
+[⬆️ 返回顶部](##简介)
 
 <!-- 
 ## 撩我
