@@ -158,7 +158,8 @@ export default defineComponent({
       console.log(data);
 
       const userInfo: UserInfo = {
-        _id: data.id_token,
+        token: data.id_token,
+        _id: data.id,
         name: data.name,
         avatar: data.avatar,
       };

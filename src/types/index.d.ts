@@ -23,6 +23,7 @@ export interface Params {
 
 // 登录
 export interface UserInfo {
+  token: string;
   _id: string;
   name: string;
   avatar: string | any;

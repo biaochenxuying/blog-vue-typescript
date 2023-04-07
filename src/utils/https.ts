@@ -1,12 +1,15 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ElMessage } from "element-plus";
+import { useStore } from "vuex";
+import { key } from '../store'
+
+const store = useStore(key);
 
 export interface ResponseData {
   code: number;
   data?: any;
   message: string;
 }
-
 
 // console.log('import.meta.env: ', import.meta.env);
 
@@ -28,6 +31,11 @@ if (import.meta.env.MODE === "development") {
 // request 拦截器 axios 的一些配置
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
+    if (window.sessionStorage.userInfo) {
+      let userInfo = JSON.parse(window.sessionStorage.userInfo);
+      config.headers["Authorization"] = `Bearer ${userInfo.token}`;
+    }
+
     return config;
   },
   (error: any) => {
