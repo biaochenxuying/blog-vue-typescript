@@ -42,9 +42,13 @@ service.interceptors.response.use(
   (res: AxiosResponse) => {
     // Some example codes here:
     // code == 0: success
+    console.log(res);
     if (res.status === 200) {
       const data: ResponseData = res.data
+
+      return data;
       if (data.code === 0) {
+        // console.log(data.data);
         return data.data;
       } else {
         ElMessage({

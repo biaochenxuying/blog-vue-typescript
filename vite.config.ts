@@ -46,10 +46,10 @@ export default defineConfig({
     // ssr: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:3333/',
-        changeOrigin: true,
+        target: 'http://localhost:8080/',
+        // changeOrigin: true,
         ws: true,
-        rewrite: (pathStr) => pathStr.replace('/api', '')
+        // rewrite: (pathStr) => pathStr.replace('/api', '')
       },
     },
   },

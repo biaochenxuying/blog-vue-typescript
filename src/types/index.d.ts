@@ -1,4 +1,8 @@
 // 基础
+// 数据entity对象定义
+
+
+
 export interface Meta {
   views: number;
   likes: number;
@@ -18,14 +22,17 @@ export interface Params {
 }
 
 // 登录
-export interface LoginParams {
-  email: string;
-  password: string;
-}
 export interface UserInfo {
   _id: string;
   name: string;
   avatar: string | any;
+}
+
+export interface LoginParams {
+  username: string;
+  rememberMe: boolean;
+  password: string;
+
 }
 export interface RegAndLogParams {
   email: string;

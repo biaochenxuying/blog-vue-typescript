@@ -8,6 +8,7 @@
   >
     <el-form>
       <el-formItem
+        v-if="handleFlag === 'register'"
         label="邮箱"
         :label-width="state.formLabelWidth"
       >
@@ -17,6 +18,16 @@
           autocomplete="off"
         >
         </el-input>
+      </el-formItem>
+      <el-formItem
+          label="用户名"
+          :label-width="state.formLabelWidth"
+      >
+        <el-input
+            v-model="state.params.name"
+            placeholder="用户名"
+            autocomplete="off"
+        ></el-input>
       </el-formItem>
       <el-formItem
         label="密码"
@@ -29,17 +40,7 @@
           autocomplete="off"
         ></el-input>
       </el-formItem>
-      <el-formItem
-        v-if="handleFlag === 'register'"
-        label="昵称"
-        :label-width="state.formLabelWidth"
-      >
-        <el-input
-          v-model="state.params.name"
-          placeholder="用户名或昵称"
-          autocomplete="off"
-        ></el-input>
-      </el-formItem>
+
       <el-formItem
         v-if="handleFlag === 'register'"
         label="手机"
@@ -68,10 +69,6 @@
       class="dialog-footer"
     >
       <el-button
-        type="success"
-        @click="handleOAuth"
-      >github 授权登录</el-button>
-      <el-button
         v-if="handleFlag === 'login'"
         :loading="state.btnLoading"
         type="primary"
@@ -94,7 +91,7 @@ import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { key } from '../store'
 import config from "../utils/config";
-import { RegAndLogParams, UserInfo } from "../types/index";
+import {LoginParams, RegAndLogParams, UserInfo} from "../types/index";
 import service from "../utils/https";
 import urls from "../utils/urls";
 
@@ -149,12 +146,19 @@ export default defineComponent({
       if (props.handleFlag === "register") {
         data = await service.post(urls.register, state.params);
       } else {
-        data = await service.post(urls.login, state.params);
+        const param: LoginParams = {
+          username: state.params.name,
+          password: state.params.password,
+          rememberMe: true,
+        };
+        data = await service.post(urls.login, param);
+        console.log(data);
       }
       state.btnLoading = false;
+      console.log(data);
 
       const userInfo: UserInfo = {
-        _id: data._id,
+        _id: data.id_token,
         name: data.name,
         avatar: data.avatar,
       };
@@ -173,20 +177,21 @@ export default defineComponent({
       const reg = new RegExp(
         "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"
       ); //正则表达式
-      if (!state.params.email) {
-        ElMessage({
-          message: "邮箱不能为空！",
-          type: "warning",
-        });
-        return;
-      } else if (!reg.test(state.params.email)) {
-        ElMessage({
-          message: "请输入格式正确的邮箱！",
-          type: "warning",
-        });
-        return;
-      }
+      // 登录时不进行验证
       if (props.handleFlag === "register") {
+        if (!state.params.email) {
+          ElMessage({
+            message: "邮箱不能为空！",
+            type: "warning",
+          });
+          return;
+        } else if (!reg.test(state.params.email)) {
+          ElMessage({
+            message: "请输入格式正确的邮箱！",
+            type: "warning",
+          });
+          return;
+        }
         if (!state.params.password) {
           ElMessage({
             message: "密码不能为空！",

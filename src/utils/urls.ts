@@ -1,6 +1,6 @@
 // url的链接
 export const urls: any = {
-  login: "login",
+  login: "authenticate",
   logout: "logout",
   register: "register",
   getUser: "getUser",
