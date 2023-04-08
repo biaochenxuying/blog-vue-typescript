@@ -18,20 +18,31 @@
             v-on:click="handleClick(article.id)"
             target="_blank"
           >
+<!--            <img-->
+<!--              class="wrap-img img-blur-done"-->
+<!--              :data-src="article.img_url"-->
+<!--              data-has-lazy-src="false"-->
+<!--              src="../assets/bg.jpg"-->
+<!--              alt="文章封面"-->
+<!--            />-->
             <img
-              class="wrap-img img-blur-done"
-              :data-src="article.img_url"
-              data-has-lazy-src="false"
-              src="../assets/bg.jpg"
-              alt="文章封面"
+                class="wrap-img img-blur-done"
+                data-src="https://v2.cn.vuejs.org/images/logo.svg"
+                data-has-lazy-src="false"
+                src="../assets/bg.jpg"
+                alt="文章封面"
             />
             <div class="content">
               <h4 class="title">{{article.title}}</h4>
 <!--              <p class="abstract">{{article.desc}}</p>-->
+              <p class="abstract">这是一个摘要</p>
               <div class="meta">
 <!--                <span>查看 {{article.meta.views}}</span>-->
 <!--                <span>评论 {{article.meta.comments}}</span>-->
 <!--                <span>赞 {{article.meta.likes}}</span>-->
+                <span>查看 100</span>
+                <span>评论 99</span>
+                <span>赞 100</span>
                 <span
                   v-if="article.lastUpdateInstant"
                   class="time"
@@ -133,25 +144,28 @@ export default defineComponent({
     };
 
     const handleSearch = async (): Promise<void> => {
+      console.log("in handleSearch");
       state.isLoading = true;
-      const data: ArticlesData = await service.get(
+      const data = await service.get(
         urls.getArticleList,
         {
           params: state.params,
         }
       );
       state.isLoading = false;
-      const list = data.list ? data.list : data;
-      state.articlesList = [...state.articlesList, ...list];
-      state.total = data.count;
+      const data_list = data.list ? data.list : data;
+      state.articlesList = [...state.articlesList, ...data_list];
+      // modify here to debug
+      state.total = 2;
+      // state.total = data.count;
       // pretend state.total = 100
       // TODO: modify backend
-      state.total = 100
+      state.total = 2;
       state.params.pageNum++;
       nextTick(() => {
         lazyload();
       });
-      if (list.length === 0 || state.total === state.articlesList.length) {
+      if (data_list.length === 0 || state.total === state.articlesList.length) {
         state.isLoadEnd = true;
         document.removeEventListener("scroll", () => {});
         window.onscroll = null;
@@ -164,7 +178,11 @@ export default defineComponent({
       state.params.category_id = getQueryStringByName("category_id");
       state.articlesList = [];
       state.params.pageNum = 1;
-      handleSearch();
+      console.log("routeChange", state.params);
+      // here for change tag_name and search again
+      // but we didn't have the feature to search by tag_name
+      // so we just ignore it
+      // handleSearch();
     }
 
     const router = useRouter();
@@ -187,7 +205,6 @@ export default defineComponent({
           }
         }
       };
-      document.addEventListener("scroll", lazyload);
     });
 
     return {

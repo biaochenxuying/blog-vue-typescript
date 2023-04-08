@@ -20,6 +20,7 @@
         <div class="num">123</div>收获喜欢
       </div> -->
     </div>
+<!-- DEBUG -->
     <div class="tags">
       <div class="title">标签云</div>
       <router-link
@@ -31,6 +32,8 @@
         <span :key="item._id">{{item.name}}</span>
       </router-link>
     </div>
+
+
 <!--    <div class="introduce">-->
 <!--      <div class="title">技术以内的 BB</div>-->
 <!--      <div class="content">-->
