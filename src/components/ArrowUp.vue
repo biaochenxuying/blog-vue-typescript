@@ -1,4 +1,5 @@
 
+<script src="../router/index.ts"></script>
 <template>
   <div>
     <i

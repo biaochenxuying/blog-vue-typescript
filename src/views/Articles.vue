@@ -11,11 +11,11 @@
       <transition-group name="el-fade-in">
         <li
           v-for="(article) in state.articlesList"
-          :key="article._id"
+          :key="article.id"
           class="item"
         >
           <a
-            :href="state.href + article._id"
+            v-on:click="handleClick(article.id)"
             target="_blank"
           >
             <img
@@ -27,16 +27,16 @@
             />
             <div class="content">
               <h4 class="title">{{article.title}}</h4>
-              <p class="abstract">{{article.desc}}</p>
+<!--              <p class="abstract">{{article.desc}}</p>-->
               <div class="meta">
-                <span>查看 {{article.meta.views}}</span>
-                <span>评论 {{article.meta.comments}}</span>
-                <span>赞 {{article.meta.likes}}</span>
+<!--                <span>查看 {{article.meta.views}}</span>-->
+<!--                <span>评论 {{article.meta.comments}}</span>-->
+<!--                <span>赞 {{article.meta.likes}}</span>-->
                 <span
-                  v-if="article.create_time"
+                  v-if="article.lastUpdateInstant"
                   class="time"
                 >
-                  {{formatTime(article.create_time)}}
+                  {{formatTime(article.lastUpdateInstant)}}
                 </span>
               </div>
             </div>
@@ -64,6 +64,7 @@ import {
   timestampToTime,
 } from "../utils/utils";
 import { ArticlesParams, ArticlesData } from "../types/index";
+import {useRoute, useRouter} from "vue-router";
 
 // 获取可视区域的高度
 const viewHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -123,7 +124,7 @@ export default defineComponent({
       } as ArticlesParams,
       href:
         import.meta.env.MODE === "development"
-          ? "http://localhost:3001/articleDetail?article_id="
+          ? "/articles?id="
           : "https://biaochenxuying.cn/articleDetail?article_id="
     });
 
@@ -140,13 +141,17 @@ export default defineComponent({
         }
       );
       state.isLoading = false;
-      state.articlesList = [...state.articlesList, ...data.list];
+      const list = data.list ? data.list : data;
+      state.articlesList = [...state.articlesList, ...list];
       state.total = data.count;
+      // pretend state.total = 100
+      // TODO: modify backend
+      state.total = 100
       state.params.pageNum++;
       nextTick(() => {
         lazyload();
       });
-      if (data.list.length === 0 || state.total === state.articlesList.length) {
+      if (list.length === 0 || state.total === state.articlesList.length) {
         state.isLoadEnd = true;
         document.removeEventListener("scroll", () => {});
         window.onscroll = null;
@@ -161,6 +166,16 @@ export default defineComponent({
       state.params.pageNum = 1;
       handleSearch();
     }
+
+    const router = useRouter();
+    const handleClick = (id: any): void => {
+      router.push({
+        path: "/articleDetail",
+        query: {
+          article_id: id
+        },
+      });
+    };
 
     onMounted(() => {
       handleSearch();
@@ -179,7 +194,8 @@ export default defineComponent({
       state,
       formatTime,
       handleSearch,
-      routeChange
+      routeChange,
+      handleClick
     };
   }
 });

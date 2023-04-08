@@ -9,9 +9,9 @@ export const urls: any = {
   addThirdComment: "addThirdComment",
   getCommentList: "getCommentList",
 
-  getArticleList: "article",
+  getArticleList: "articles",
   likeArticle: "likeArticle",
-  getArticleDetail: "getArticleDetail",
+  getArticleDetail: "articles",
 
   addMessage: "addMessage",
   getMessageList: "getMessageList",

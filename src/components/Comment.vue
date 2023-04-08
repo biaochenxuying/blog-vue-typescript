@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+      class="login-dialog"
     title="评论"
     width="60%"
     v-model="state.dialogDodel"
@@ -153,5 +154,11 @@ export default defineComponent({
 <style scoped>
 .dialog-footer {
   text-align: right;
+}
+.login-dialog {
+  background: #f0f0f0;
+}
+.el-dialog background{
+  background-color: #fff;
 }
 </style>

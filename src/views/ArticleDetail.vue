@@ -24,23 +24,23 @@
                 props-data-classes="user-follow-button-header"
                 data-author-follow-button=""
               />
-              <div class="meta">
-                <span class="publish-time">
-                  {{state.articleDetail.create_time? formatTime(state.articleDetail.create_time): ''}}
-                </span>
-                <span class="wordage">
-                  字数 {{state.articleDetail.numbers}}
-                </span>
-                <span class="views-count">
-                  阅读 {{state.articleDetail.meta.views}}
-                </span>
-                <span class="comments-count">
-                  评论 {{state.articleDetail.meta.comments}}
-                </span>
-                <span class="likes-count">
-                  喜欢 {{state.articleDetail.meta.likes}}
-                </span>
-              </div>
+<!--              <div class="meta">-->
+<!--                <span class="publish-time">-->
+<!--                  {{state.articleDetail.create_time? formatTime(state.articleDetail.create_time): ''}}-->
+<!--                </span>-->
+<!--                <span class="wordage">-->
+<!--                  字数 {{state.articleDetail.numbers}}-->
+<!--                </span>-->
+<!--                <span class="views-count">-->
+<!--                  阅读 {{state.articleDetail.meta.views}}-->
+<!--                </span>-->
+<!--                <span class="comments-count">-->
+<!--                  评论 {{state.articleDetail.meta.comments}}-->
+<!--                </span>-->
+<!--                <span class="likes-count">-->
+<!--                  喜欢 {{state.articleDetail.meta.likes}}-->
+<!--                </span>-->
+<!--              </div>-->
             </div>
             <div
               class="tags "
@@ -89,13 +89,14 @@
             @click="handleAddComment"
           >发 送</el-button>
         </div>
-        <CommentList
-          v-if="!state.isLoading"
-          :numbers="state.articleDetail.meta.comments"
-          :list="state.articleDetail.comments"
-          :article_id="state.articleDetail._id"
-          @refreshArticle="refreshArticle"
-        />
+        <!-- 评论列表 -->
+<!--        <CommentList-->
+<!--          v-if="!state.isLoading"-->
+<!--          :numbers="state.articleDetail.meta.comments"-->
+<!--          :list="state.articleDetail.comments"-->
+<!--          :article_id="state.articleDetail._id"-->
+<!--          @refreshArticle="refreshArticle"-->
+<!--        />-->
       </div>
       <div
         v-if="!state.isMobileOrPc"
@@ -174,23 +175,24 @@ export default defineComponent({
 
     const handleSearch = async (): Promise<void> => {
       state.isLoading = true;
-      const data: any = await service.post(urls.getArticleDetail, state.params);
+      // 拼接get请求参数
+      const url = `${urls.getArticleDetail}/${state.params.id}`;
+      const data: any = await service.get(url);
       state.isLoading = false;
-
       state.articleDetail = data;
       const article = markdown.marked(data.content);
       article.then((res: any) => {
         state.articleDetail.content = res.content;
         state.articleDetail.toc = res.toc;
       });
-      let keyword = data.keyword.join(",");
-      let description = data.desc;
+      // let keyword = data.keyword.join(",");
+      // let description = data.desc;
       let title = data.title;
       document.title = title;
-      document.querySelector("#keywords").setAttribute("content", keyword);
-      document
-        .querySelector("#description")
-        .setAttribute("content", description);
+      // document.querySelector("#keywords").setAttribute("content", keyword);
+      // document
+      //   .querySelector("#description")
+      //   .setAttribute("content", description);
     };
 
     const refreshArticle = (): void => {

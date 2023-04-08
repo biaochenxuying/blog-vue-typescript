@@ -1,5 +1,7 @@
 <template>
+  <div class="login-dialog1">
   <el-dialog
+      custom-class="login-dialog"
     title="登录"
     :width="isMobile ? '90%' : '50%'"
     v-model="state.dialogDodel"
@@ -82,6 +84,7 @@
       >注 册</el-button>
     </div>
   </el-dialog>
+    </div>
 </template>
 
 <script lang="ts">
@@ -159,7 +162,7 @@ export default defineComponent({
 
       const userInfo: UserInfo = {
         token: data.id_token,
-        _id: data.id,
+        _id: data.id_token,
         name: data.name,
         avatar: data.avatar,
       };
@@ -240,5 +243,10 @@ export default defineComponent({
 <style scoped>
 .dialog-footer {
   text-align: right;
+}
+</style>
+<style>
+.login-dialog {
+  background-color: #f0f0f0;
 }
 </style>
